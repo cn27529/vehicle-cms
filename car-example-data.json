@@ -12,7 +12,9 @@
             "purchase_date": "2024-06-05",
             "last_updated": "2025-10-03",
             "phone": "0912345678",
-            "mobile": "0912345678"
+            "mobile": "0912345678",
+            "name": "王小明",
+            "email": "OgK0v@example.com"
         },
         "maintenance_records": {
             "engine_oil": {
@@ -348,20 +350,22 @@
         }
     },
     {
-        "make": "volkswagen",
-        "model": "golf",
-        "year": 2019,
-        "engine_code": "K10C",
-        "color": "blue",
-        "manufacture_date": "2019-03-28",
-        "current_mileage": 106150,
-        "license_plate": "BDE-9373",
-        "purchase_price": 250000,
-        "purchase_date": "2024-06-05",
-        "vin": "MA3EWB42500468048",
-        "last_updated": "2025-10-03",
-        "phone": "0912345678",
-        "mobile": "0912345678",
+        "vehicle_info": {
+            "make": "volkswagen",
+            "model": "golf",
+            "year": 2019,
+            "engine_code": "VW123",
+            "color": "red",
+            "manufacture_date": "2005-12-12",
+            "current_mileage": 321000,
+            "license_plate": "BDE-9373",
+            "purchase_date": "2024-06-05",
+            "last_updated": "2025-10-03",
+            "phone": "0912345678",
+            "mobile": "0912345678",
+            "name": "廣三",
+            "email": "1234@example.com"
+        },
         "maintenance_records": {
             "engine_oil": {
                 "item_en": "engine_oil",
