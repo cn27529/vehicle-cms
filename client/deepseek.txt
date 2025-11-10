@@ -1,0 +1,21 @@
+我是一個汽車技工，我在保修工廠的汽車，這個json資料檔資料與結構是一個不錯的汽車保養維護項目，我想依據json資料生成一個vite+vue+ant-design-vue的前端專案並用專案來取代現有的json檔案的資料維護每一輛保修的汽車，你覺的我想法如何呢？前端專案目錄結構依據下列tree（tree是範例）生成環境與檔案，import統一使用雙引號，注意dayjs的日期YYYY-MM-DD格式，版面需要响應式布局，功能在側邊欄可以縮放，使用icon圖標，保留以後串接API彈性，我會給車主URL比如http://127.0.0.1/myvehicles/BDE-9373，車主自己能看到自己車的Dashboard，VehicleList.vue只有保修技工使用，先提供核心功能。
+./client
+├── src
+│   ├── components
+│   │   ├── VehicleInfo.vue          # 車輛基本資訊組件
+│   │   ├── MaintenanceTable.vue     # 保養項目表格
+│   │   ├── ServiceHistory.vue       # 服務歷史記錄
+│   │   └── MaintenanceForm.vue      # 保養項目表單
+│   ├── views
+│   │   ├── MyCar.vue          # 車主頁面
+│   │   ├── VehicleList.vue          # 車輛列表頁面
+│   │   ├── VehicleDetail.vue        # 車輛詳細資訊頁面
+│   │   └── MaintenanceView.vue      # 保養管理頁面
+│   ├── stores
+│   │   └── vehicles.js              # 車輛資料狀態管理
+│   ├── services
+│   │   └── vehicleService.js        # 車輛資料 API 服務
+│   └── data
+│       └── vehicles                 # 存放多輛車的 JSON 檔案
+│           ├── car_maintenance.json
+│           └── (其他車輛檔案)
