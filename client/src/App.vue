@@ -1,89 +1,248 @@
 <template>
-  <a-config-provider :locale="locale">
-    <a-layout style="min-height: 100vh">
-      <a-layout-sider
-        v-model:collapsed="collapsed"
-        :trigger="null"
-        collapsible
-        breakpoint="lg"
-        @breakpoint="onBreakpoint"
-      >
+  <div id="app">
+    <el-container class="layout-container">
+      <!-- 侧边栏 -->
+      <el-aside :width="isCollapse ? '64px' : '200px'" class="sidebar">
         <div class="logo">
-          <h2 v-if="!collapsed" style="color: white; margin: 16px; text-align: center">
-            汽車保修系統
-          </h2>
-          <h2 v-else style="color: white; margin: 16px; text-align: center">⚙️</h2>
+          <i class="el-icon-car"></i>
+          <span v-if="!isCollapse">汽車保養記錄</span>
         </div>
-        <a-menu
-          v-model:selectedKeys="selectedKeys"
-          theme="dark"
-          mode="inline"
-          :items="menuItems"
-        />
-      </a-layout-sider>
-      <a-layout>
-        <a-layout-header style="background: #fff; padding: 0 16px">
-          <menu-unfold-outlined
-            v-if="collapsed"
-            class="trigger"
-            @click="() => (collapsed = !collapsed)"
-          />
-          <menu-fold-outlined v-else class="trigger" @click="() => (collapsed = !collapsed)" />
-          <span style="margin-left: 16px">汽車保修管理系統</span>
-        </a-layout-header>
-        <a-layout-content style="margin: 16px">
-          <div :style="{ padding: '24px', background: '#fff', minHeight: '360px' }">
-            <router-view />
+        <el-menu
+          :default-active="activeMenu"
+          class="sidebar-menu"
+          :collapse="isCollapse"
+          :collapse-transition="false"
+          router
+          background-color="#304156"
+          text-color="#bfcbd9"
+          active-text-color="#409EFF"
+        >
+          <el-menu-item index="/dashboard">
+            <i class="el-icon-data-board"></i>
+            <template #title>儀表板</template>
+          </el-menu-item>
+          <el-menu-item index="/vehicles">
+            <i class="el-icon-truck"></i>
+            <template #title>車輛列表</template>
+          </el-menu-item>
+          <el-menu-item index="/maintenance">
+            <i class="el-icon-document"></i>
+            <template #title>保養記錄</template>
+          </el-menu-item>
+        </el-menu>
+      </el-aside>
+
+      <!-- 主内容区 -->
+      <el-container>
+        <!-- 头部 -->
+        <el-header class="header">
+          <div class="header-left">
+            <el-button
+              type="text"
+              :icon="isCollapse ? 'el-icon-expand' : 'el-icon-fold'"
+              @click="toggleSidebar"
+              class="collapse-btn"
+            ></el-button>
+            <el-breadcrumb separator="/">
+              <el-breadcrumb-item :to="{ path: '/' }">首頁</el-breadcrumb-item>
+              <el-breadcrumb-item>{{ currentRouteName }}</el-breadcrumb-item>
+            </el-breadcrumb>
           </div>
-        </a-layout-content>
-      </a-layout>
-    </a-layout>
-  </a-config-provider>
+          <div class="header-right">
+            <el-dropdown @command="handleCommand">
+              <span class="user-info">
+                <el-avatar :size="32" :src="userAvatar" />
+                <span class="user-name">車主</span>
+                <i class="el-icon-arrow-down"></i>
+              </span>
+              <template #dropdown>
+                <el-dropdown-menu>
+                  <el-dropdown-item command="profile">個人資料</el-dropdown-item>
+                  <el-dropdown-item command="settings">設定</el-dropdown-item>
+                  <el-dropdown-item divided command="logout">登出</el-dropdown-item>
+                </el-dropdown-menu>
+              </template>
+            </el-dropdown>
+          </div>
+        </el-header>
+
+        <!-- 内容区域 -->
+        <el-main class="main-content">
+          <router-view />
+        </el-main>
+      </el-container>
+    </el-container>
+  </div>
 </template>
 
-<script setup>
-import { ref, watch, computed, h } from "vue";
-import { useRoute, useRouter } from "vue-router";
-import { 
-  MenuUnfoldOutlined, 
-  MenuFoldOutlined,
-  TeamOutlined,
-  CarOutlined
-} from "@ant-design/icons-vue";
-import zhCN from "ant-design-vue/es/locale/zh_TW";
+<script>
+import { ref, computed } from "vue";
+import { useRoute } from "vue-router";
 
-const route = useRoute();
-const router = useRouter();
-const collapsed = ref(false);
-const selectedKeys = ref([route.path]);
+export default {
+  name: "App",
+  setup() {
+    const isCollapse = ref(false);
+    const route = useRoute();
+    const userAvatar = ref("");
 
-const locale = zhCN;
+    const activeMenu = computed(() => route.path);
+    
+    const currentRouteName = computed(() => {
+      const routeMap = {
+        "/dashboard": "儀表板",
+        "/vehicles": "車輛列表",
+        "/maintenance": "保養記錄"
+      };
+      return routeMap[route.path] || "首頁";
+    });
 
-const menuItems = computed(() => [
-  {
-    key: "/admin/vehicles",
-    icon: () => h(TeamOutlined),
-    label: "車輛管理",
-    onClick: () => router.push("/admin/vehicles")
+    const toggleSidebar = () => {
+      isCollapse.value = !isCollapse.value;
+    };
+
+    const handleCommand = (command) => {
+      switch (command) {
+        case "logout":
+          console.log("登出");
+          break;
+        case "profile":
+          console.log("個人資料");
+          break;
+        case "settings":
+          console.log("設定");
+          break;
+      }
+    };
+
+    return {
+      isCollapse,
+      activeMenu,
+      currentRouteName,
+      userAvatar,
+      toggleSidebar,
+      handleCommand,
+    };
   },
-  {
-    key: "/mycar",
-    icon: () => h(CarOutlined),
-    label: "我的車輛",
-    onClick: () => router.push("/mycar")
-  }
-]);
-
-watch(
-  () => route.path,
-  (newPath) => {
-    selectedKeys.value = [newPath];
-  }
-);
-
-const onBreakpoint = (broken) => {
-  if (broken) {
-    collapsed.value = true;
-  }
 };
 </script>
+
+<style>
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+#app {
+  font-family: "Helvetica Neue", Helvetica, "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", "微软雅黑", Arial, sans-serif;
+  height: 100vh;
+}
+
+.layout-container {
+  height: 100vh;
+}
+
+.sidebar {
+  background-color: #304156;
+  transition: width 0.3s;
+  overflow: hidden;
+}
+
+.logo {
+  height: 60px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #fff;
+  font-size: 18px;
+  font-weight: bold;
+  border-bottom: 1px solid #2b3847;
+}
+
+.logo i {
+  font-size: 24px;
+  margin-right: 8px;
+}
+
+.sidebar-menu {
+  border: none;
+}
+
+.sidebar-menu:not(.el-menu--collapse) {
+  width: 200px;
+}
+
+.header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 20px;
+  background-color: #fff;
+  box-shadow: 0 1px 4px rgba(0, 21, 41, 0.08);
+  border-bottom: 1px solid #e6e6e6;
+}
+
+.header-left {
+  display: flex;
+  align-items: center;
+}
+
+.collapse-btn {
+  font-size: 18px;
+  margin-right: 16px;
+}
+
+.user-info {
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+  padding: 8px 12px;
+  border-radius: 4px;
+  transition: background-color 0.3s;
+}
+
+.user-info:hover {
+  background-color: #f5f7fa;
+}
+
+.user-name {
+  margin: 0 8px;
+  font-size: 14px;
+}
+
+.main-content {
+  background-color: #f0f2f5;
+  padding: 20px;
+  overflow-y: auto;
+}
+
+/* 响应式设计 */
+@media (max-width: 768px) {
+  .sidebar {
+    position: fixed;
+    left: 0;
+    top: 0;
+    height: 100vh;
+    z-index: 1000;
+    transform: translateX(-100%);
+    transition: transform 0.3s;
+  }
+  
+  .sidebar.open {
+    transform: translateX(0);
+  }
+  
+  .header {
+    padding: 0 10px;
+  }
+  
+  .main-content {
+    padding: 10px;
+  }
+  
+  .user-name {
+    display: none;
+  }
+}
+</style>

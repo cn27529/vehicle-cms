@@ -1,117 +1,98 @@
-import dayjs from "dayjs";
+import { ref } from "vue";
 
-class VehicleService {
-  constructor() {
-    this.storageKey = "vehicle-maintenance-data";
-    this.initSampleData();
-  }
+// 模拟 API 调用
+const simulateApiCall = (data, delay = 500) => {
+  return new Promise((resolve) => {
+    setTimeout(() => resolve(data), delay);
+  });
+};
 
-  initSampleData() {
-    if (!localStorage.getItem(this.storageKey)) {
-      // 使用您提供的實際資料
-      const sampleData = [
-        {
-          vehicle_info: {
-            brand: "Suzuki",
-            model: "BALENO",
-            year: 2018,
-            engine_code: "K10C",
-            color: "blue",
-            manufacture_date: "2019-03-28",
-            current_mileage: 106150,
-            license_plate: "BDE-9373",
-            purchase_date: "2024-06-05",
-            last_updated: "2025-10-03",
-            phone: "0912345678"
-          },
-          maintenance_records: [
-            // ... 您提供的完整保養記錄資料
-          ]
-        }
-      ];
-      localStorage.setItem(this.storageKey, JSON.stringify(sampleData));
-    }
-  }
-
+export const vehicleService = {
+  // 获取所有车辆
   async getVehicles() {
-    try {
-      const data = localStorage.getItem(this.storageKey);
-      return JSON.parse(data) || [];
-    } catch (error) {
-      console.error("取得車輛資料失敗:", error);
-      return [];
-    }
-  }
+    const response = await fetch("/src/data/car_example_data.json");
+    const data = await response.json();
+    return simulateApiCall(data);
+  },
 
-  async getVehicleByPlate(plateNumber) {
-    const vehicles = await this.getVehicles();
-    return vehicles.find(vehicle => 
-      vehicle.vehicle_info.license_plate.replace(/-/g, "") === plateNumber.replace(/-/g, "")
+  // 获取单个车辆信息
+  async getVehicle(licensePlate) {
+    const response = await fetch("/src/data/car_example_data.json");
+    const data = await response.json();
+    const vehicle = data.find(
+      (v) =>
+        (v.vehicle_info && v.vehicle_info.license_plate === licensePlate) ||
+        v.license_plate === licensePlate
     );
-  }
+    return simulateApiCall(vehicle);
+  },
 
-  async updateVehicle(vehicleData) {
-    try {
-      const vehicles = await this.getVehicles();
-      const index = vehicles.findIndex(v => 
-        v.vehicle_info.license_plate === vehicleData.vehicle_info.license_plate
-      );
-      if (index !== -1) {
-        vehicles[index] = vehicleData;
-        localStorage.setItem(this.storageKey, JSON.stringify(vehicles));
-        return vehicleData;
-      }
-      throw new Error("車輛不存在");
-    } catch (error) {
-      console.error("更新車輛資料失敗:", error);
-      throw error;
-    }
-  }
+  // 更新车辆信息
+  async updateVehicle(licensePlate, vehicleData) {
+    return simulateApiCall({ success: true, data: vehicleData });
+  },
 
-  async addMaintenanceRecord(plateNumber, recordData) {
-    const vehicle = await this.getVehicleByPlate(plateNumber);
-    if (vehicle) {
-      const recordIndex = vehicle.maintenance_records.findIndex(
-        r => r.item_en === recordData.item_en
-      );
-      
-      if (recordIndex !== -1) {
-        // 更新現有記錄
-        vehicle.maintenance_records[recordIndex] = recordData;
-      } else {
-        // 新增記錄
-        vehicle.maintenance_records.push(recordData);
-      }
-      
-      vehicle.vehicle_info.last_updated = dayjs().format("YYYY-MM-DD");
-      return await this.updateVehicle(vehicle);
-    }
-    throw new Error("車輛不存在");
-  }
+  // 添加保养记录
+  async addMaintenanceRecord(licensePlate, recordData) {
+    return simulateApiCall({ success: true, data: recordData });
+  },
 
-  async addServiceHistory(plateNumber, itemEn, serviceData) {
-    const vehicle = await this.getVehicleByPlate(plateNumber);
-    if (vehicle) {
-      const record = vehicle.maintenance_records.find(r => r.item_en === itemEn);
-      if (record) {
-        const newService = {
-          ...serviceData,
-          service_date: serviceData.service_date || dayjs().format("YYYY-MM-DD")
-        };
-        record.service_history.push(newService);
-        
-        // 更新下次保養里程
-        if (record.interval_km && serviceData.service_mileage) {
-          record.next_due_mileage = parseInt(serviceData.service_mileage) + parseInt(record.interval_km);
+  // 获取保养统计
+  async getMaintenanceStats(licensePlate) {
+    const response = await fetch("/src/data/car_example_data.json");
+    const data = await response.json();
+    const vehicle = data.find(
+      (v) =>
+        (v.vehicle_info && v.vehicle_info.license_plate === licensePlate) ||
+        v.license_plate === licensePlate
+    );
+
+    const stats = {
+      totalCost: 0,
+      serviceCount: 0,
+      upcomingServices: 0,
+      recentServices: [],
+    };
+
+    if (vehicle && vehicle.maintenance_records) {
+      Object.values(vehicle.maintenance_records).forEach((item) => {
+        if (item.service_history) {
+          item.service_history.forEach((history) => {
+            if (history.cost) {
+              stats.totalCost += history.cost;
+            }
+            if (history.service_date) {
+              stats.serviceCount++;
+
+              // 检查是否为最近3个月的服务
+              const serviceDate = new Date(history.service_date);
+              const threeMonthsAgo = new Date();
+              threeMonthsAgo.setMonth(threeMonthsAgo.getMonth() - 3);
+
+              if (serviceDate > threeMonthsAgo) {
+                stats.recentServices.push({
+                  ...item,
+                  ...history,
+                });
+              }
+            }
+          });
         }
-        
-        vehicle.vehicle_info.last_updated = dayjs().format("YYYY-MM-DD");
-        return await this.updateVehicle(vehicle);
-      }
-      throw new Error("保養項目不存在");
-    }
-    throw new Error("車輛不存在");
-  }
-}
 
-export const vehicleService = new VehicleService();
+        // 检查即将到期的服务
+        const currentMileage =
+          vehicle.vehicle_info?.current_mileage || vehicle.current_mileage;
+        if (item.next_due_mileage && currentMileage) {
+          const mileageDiff = item.next_due_mileage - currentMileage;
+          if (mileageDiff <= 2000 && mileageDiff > 0) {
+            stats.upcomingServices++;
+          }
+        }
+      });
+    }
+
+    return simulateApiCall(stats);
+  },
+};
+
+export default vehicleService;

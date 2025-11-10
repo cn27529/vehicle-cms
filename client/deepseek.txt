@@ -1,31 +1,18 @@
-我是一個汽車技工在保修工廠工作，我想讓車主有自己的保修記錄［自己的車自己記錄保修］是我的想法，
-car_maintenance.json檔資料與結構是一不錯的汽車保修記錄項目，
-我想依據car_maintenance.json資料生成vite+vue+ant-design-vue的前端專案命名為car-cms，以car_maintenance.json檔案資料做為範例
-，生成保修記錄汽車的功能頁面，車主日後維護保修記錄自己的汽車，你覺的我想法如何呢？
-目前我只做Dashboard.vue()
-前端專案目錄結構依據下列tree（tree是範例）生成環境與檔案，import統一使用雙引號，版面需要支持手機應用布局，
-功能在側邊欄可以縮放，圖示使用icon圖標，
-保留日後串接API彈性，車主自己能看到自己車的Dashboard，
-VehicleList.vue只有保修技工使用，先提供核心功能。
-
+我是一個汽車技師在保修工廠工作多年，我想讓車主都有自己的保修，「自己的車自己記錄保修」是我的出發點，，你覺的我想法如何呢？
+car_example_data.json資料與結構是一不錯的保修記錄項目有兩筆記錄，一位車位可能會有多台車，登記的電話會是同一個號碼，多數一位車主是一台車。
+利用 car_example_data.json檔案資料生成一個 Vite+Vue3+Element Plus 前端專案，生成保修記錄的功能頁面，車主自己可日後隨時自己維護保修記錄，就算在某次在其它地方保修也能自行記錄，保修記錄不會散在各家保修廠，目前先做Dashboard.vue來看看效果，Dashboard.vue（車主關注的儀表）關注項目如：近期保修、即將到來、歷年統計...等等。
+我只想到這些，如果你是車主想看到什麼儀表是你想要一眼就知道的關心項目呢，你也可以發揮想法，所以Dashboard.vue重要，讓車主眼睛一亮：我要這個。車主能看到質量好的Dashboard一定會很開心的。
+前端專案目錄結構依據下列tree（tree是範例）生成環境與檔案，import統一使用雙引號，版面需要支持手機應用布局，功能在側邊欄可以縮放，圖示使用icon圖標，保留日後串接API彈性，VehicleList.vue只有保修技工使用，先提供核心功能。
 
 ./client
 ├── src
 │   ├── components
-│   │   ├── VehicleInfo.vue          # 車輛基本資訊組件
-│   │   ├── MaintenanceTable.vue     # 保養項目表格
-│   │   ├── ServiceHistory.vue       # 服務歷史記錄
-│   │   └── MaintenanceForm.vue      # 保養項目表單
+│   │   └── VehicleInfo.vue          # 車輛基本資訊組件
 │   ├── views
-│   │   ├── MyCar.vue          # 車主頁面
-│   │   ├── VehicleList.vue          # 車輛列表頁面
-│   │   ├── VehicleDetail.vue        # 車輛詳細資訊頁面
-│   │   └── MaintenanceView.vue      # 保養管理頁面
+│   │   └── VehicleList.vue          # 車輛列表頁面
 │   ├── stores
 │   │   └── vehicles.js              # 車輛資料狀態管理
 │   ├── services
 │   │   └── vehicleService.js        # 車輛資料 API 服務
 │   └── data
-│       └── vehicles                 # 存放多輛車的 JSON 檔案
-│           ├── car_maintenance.json
-│           └── (其他車輛檔案)
+│       └── car_example_data.json    # 車的 JSON 檔案

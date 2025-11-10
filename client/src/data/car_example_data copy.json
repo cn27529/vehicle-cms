@@ -1,0 +1,702 @@
+[
+    {
+        "vehicle_info": {
+            "brand": "Suzuki",
+            "model": "BALENO",
+            "year": 2018,
+            "engine_code": "K10C",
+            "color": "blue",
+            "manufacture_date": "2019-03-28",
+            "current_mileage": 106150,
+            "license_plate": "BDE-9373",
+            "purchase_date": "2024-06-05",
+            "last_updated": "2025-10-03",
+            "phone": "0988111111",
+            "mobile": "0912345678",
+            "name": "王小明",
+            "email": "OgK0v@example.com"
+        },
+        "maintenance_records": {
+            "engine_oil": {
+                "item_en": "engine_oil",
+                "item_zh": "引擎機油",
+                "category": "引擎",
+                "interval_km": 7500,
+                "next_due_mileage": 113650,
+                "service_type": "replace",
+                "service_history": [
+                    {
+                        "service_date": "2024-11-22",
+                        "service_mileage": 99150,
+                        "state": "ok",
+                        "note": "",
+                        "service_location": "",
+                        "cost": 1200,
+                        "technician": "",
+                        "reminder": false
+                    },
+                    {
+                        "service_date": "2025-10-03",
+                        "service_mileage": 102035,
+                        "state": "",
+                        "note": "濾芯、墊片、油塞、原廠保養",
+                        "service_location": "",
+                        "cost": 0,
+                        "technician": "",
+                        "reminder": false
+                    }
+                ]
+            },
+            "transmission_fluid": {
+                "item_en": "transmission_fluid",
+                "item_zh": "變速箱油",
+                "category": "傳動",
+                "interval_km": 40000,
+                "next_due_mileage": 137667,
+                "service_type": "replace",
+                "service_history": [
+                    {
+                        "service_date": "2025-03-21",
+                        "service_mileage": 97667,
+                        "state": "ok",
+                        "note": "洩油塞x2",
+                        "service_location": "",
+                        "cost": 3685,
+                        "technician": "",
+                        "reminder": false
+                    }
+                ]
+            },
+            "cabin_air_filter": {
+                "item_en": "cabin_air_filter",
+                "item_zh": "冷氣濾網",
+                "category": "空調",
+                "interval_km": 3000,
+                "next_due_mileage": 101877,
+                "service_type": "replace",
+                "service_history": [
+                    {
+                        "service_date": "2025-06-04",
+                        "service_mileage": 98877,
+                        "state": "ok",
+                        "note": "",
+                        "service_location": "",
+                        "cost": 0,
+                        "technician": "",
+                        "reminder": false
+                    }
+                ]
+            },
+            "engine_air_filter": {
+                "item_en": "engine_air_filter",
+                "item_zh": "引擎空氣濾網",
+                "category": "進氣系統",
+                "interval_km": 40000,
+                "next_due_mileage": 137724,
+                "service_type": "replace",
+                "service_history": [
+                    {
+                        "service_date": "2025-06-04",
+                        "service_mileage": 97724,
+                        "state": "ok",
+                        "note": "",
+                        "service_location": "",
+                        "cost": 0,
+                        "technician": "",
+                        "reminder": false
+                    }
+                ]
+            },
+            "spark_plugs": {
+                "item_en": "spark_plugs",
+                "item_zh": "火星塞",
+                "category": "引擎",
+                "interval_km": 40000,
+                "next_due_mileage": 150000,
+                "service_type": "replace",
+                "service_history": [
+                    {
+                        "service_date": "",
+                        "service_mileage": 80000,
+                        "state": "",
+                        "note": "更換火星塞",
+                        "service_location": "",
+                        "cost": 0,
+                        "technician": "",
+                        "reminder": false
+                    }
+                ]
+            },
+            "coolant": {
+                "item_en": "coolant",
+                "item_zh": "冷卻液",
+                "category": "冷卻系統",
+                "interval_km": 40000,
+                "next_due_mileage": 111807,
+                "service_type": "replace",
+                "service_history": [
+                    {
+                        "service_date": "2023-01-12",
+                        "service_mileage": 71807,
+                        "state": "ok",
+                        "note": "水箱水更新",
+                        "service_location": "",
+                        "cost": 800,
+                        "technician": "",
+                        "reminder": false
+                    }
+                ]
+            },
+            "battery": {
+                "item_en": "battery",
+                "item_zh": "電瓶",
+                "category": "電系",
+                "interval_km": "",
+                "next_due_mileage": "",
+                "service_type": "check",
+                "service_history": [
+                    {
+                        "service_date": "2023-09-23",
+                        "service_mileage": 76100,
+                        "state": "",
+                        "note": "廠牌：SUZUKI",
+                        "service_location": "",
+                        "cost": 2940,
+                        "technician": "",
+                        "reminder": false
+                    },
+                    {
+                        "service_date": "2025-09-24",
+                        "service_mileage": 101500,
+                        "state": "ok",
+                        "note": "更換品牌：power zone",
+                        "service_location": "",
+                        "cost": 1900,
+                        "technician": "",
+                        "reminder": false
+                    }
+                ]
+            },
+            "engine_mount": {
+                "item_en": "engine_mount",
+                "item_zh": "引擎腳",
+                "category": "底盤",
+                "interval_km": 80000,
+                "next_due_mileage": 177724,
+                "service_type": "check",
+                "service_history": [
+                    {
+                        "service_date": "",
+                        "service_mileage": 0,
+                        "state": "",
+                        "note": "",
+                        "service_location": "",
+                        "cost": 0,
+                        "technician": "",
+                        "reminder": false
+                    }
+                ]
+            },
+            "shock_absorbers": {
+                "item_en": "shock_absorbers",
+                "item_zh": "避震器",
+                "category": "底盤",
+                "interval_km": 80000,
+                "next_due_mileage": 177724,
+                "service_type": "check",
+                "service_history": [
+                    {
+                        "service_date": "",
+                        "service_mileage": 0,
+                        "state": "",
+                        "note": "",
+                        "service_location": "",
+                        "cost": 0,
+                        "technician": "",
+                        "reminder": false
+                    }
+                ]
+            },
+            "brake_fluid": {
+                "item_en": "brake_fluid",
+                "item_zh": "煞車油",
+                "category": "制動系統",
+                "interval_km": 30000,
+                "next_due_mileage": 101807,
+                "service_type": "replace",
+                "service_history": [
+                    {
+                        "service_date": "2023-01-12",
+                        "service_mileage": 71807,
+                        "state": "ok",
+                        "note": "",
+                        "service_location": "",
+                        "cost": 1500,
+                        "technician": "",
+                        "reminder": false
+                    }
+                ]
+            },
+            "fuel_injector": {
+                "item_en": "fuel_injector",
+                "item_zh": "噴油嘴",
+                "category": "進氣系統",
+                "interval_km": 40000,
+                "next_due_mileage": 137724,
+                "service_type": "check",
+                "service_history": [
+                    {
+                        "service_date": "",
+                        "service_mileage": 0,
+                        "state": "",
+                        "note": "",
+                        "service_location": "",
+                        "cost": 0,
+                        "technician": "",
+                        "reminder": false
+                    }
+                ]
+            },
+            "turbocharger": {
+                "item_en": "turbocharger",
+                "item_zh": "渦輪增壓器",
+                "category": "引擎",
+                "interval_km": 40000,
+                "next_due_mileage": 137724,
+                "service_type": "check",
+                "service_history": [
+                    {
+                        "service_date": "",
+                        "service_mileage": 0,
+                        "state": "",
+                        "note": "",
+                        "service_location": "",
+                        "cost": 0,
+                        "technician": "",
+                        "reminder": false
+                    }
+                ]
+            },
+            "exhaust_system": {
+                "item_en": "exhaust_system",
+                "item_zh": "排氣系統",
+                "category": "排氣系統",
+                "interval_km": 20000,
+                "next_due_mileage": 117724,
+                "service_type": "check",
+                "service_history": [
+                    {
+                        "service_date": "",
+                        "service_mileage": 0,
+                        "state": "",
+                        "note": "",
+                        "service_location": "",
+                        "cost": 0,
+                        "technician": "",
+                        "reminder": false
+                    }
+                ]
+            },
+            "light_bulb": {
+                "item_en": "light_bulb",
+                "item_zh": "車燈",
+                "category": "電系",
+                "interval_km": 10000,
+                "next_due_mileage": 107724,
+                "service_type": "check",
+                "service_history": [
+                    {
+                        "service_date": "",
+                        "service_mileage": 0,
+                        "state": "",
+                        "note": "",
+                        "service_location": "",
+                        "cost": 0,
+                        "technician": "",
+                        "reminder": false
+                    }
+                ]
+            },
+            "tires": {
+                "item_en": "tires",
+                "item_zh": "輪胎",
+                "category": "底盤",
+                "interval_km": 10000,
+                "next_due_mileage": 107724,
+                "service_type": "check",
+                "service_history": [
+                    {
+                        "service_date": "2021-10-21",
+                        "service_mileage": 45883,
+                        "state": "",
+                        "note": "輪胎更換",
+                        "service_location": "",
+                        "cost": 0,
+                        "technician": "",
+                        "reminder": false
+                    },
+                    {
+                        "service_date": "2025-10-03",
+                        "service_mileage": 102035,
+                        "state": "",
+                        "note": "前後調胎",
+                        "service_location": "",
+                        "cost": 0,
+                        "technician": "",
+                        "reminder": false
+                    }
+                ]
+            }
+        }
+    },
+    {
+        "vehicle_info": {
+            "make": "volkswagen",
+            "model": "golf",
+            "year": 2019,
+            "engine_code": "VW123",
+            "color": "red",
+            "manufacture_date": "2005-12-12",
+            "current_mileage": 321000,
+            "license_plate": "QQQ-1234",
+            "purchase_date": "2024-06-05",
+            "last_updated": "2025-10-03",
+            "phone": "0912345678",
+            "mobile": "0912345678",
+            "name": "廣三",
+            "email": "1234@example.com"
+        },
+        "maintenance_records": {
+            "engine_oil": {
+                "item_en": "engine_oil",
+                "item_zh": "引擎機油",
+                "category": "引擎",
+                "interval_km": 7500,
+                "next_due_mileage": 113650,
+                "service_type": "replace",
+                "service_history": [
+                    {
+                        "service_date": "2024-11-22",
+                        "service_mileage": 99150,
+                        "state": "ok",
+                        "note": "",
+                        "service_location": "",
+                        "cost": 1200,
+                        "technician": "",
+                        "reminder": false
+                    },
+                    {
+                        "service_date": "2025-10-03",
+                        "service_mileage": 102035,
+                        "state": "",
+                        "note": "濾芯、墊片、油塞、原廠保養",
+                        "service_location": "",
+                        "cost": 0,
+                        "technician": "",
+                        "reminder": false
+                    }
+                ]
+            },
+            "transmission_fluid": {
+                "item_en": "transmission_fluid",
+                "item_zh": "變速箱油",
+                "category": "傳動",
+                "interval_km": 40000,
+                "next_due_mileage": 137667,
+                "service_type": "replace",
+                "service_history": [
+                    {
+                        "service_date": "2025-03-21",
+                        "service_mileage": 97667,
+                        "state": "ok",
+                        "note": "洩油塞x2",
+                        "service_location": "",
+                        "cost": 3685,
+                        "technician": "",
+                        "reminder": false
+                    }
+                ]
+            },
+            "cabin_air_filter": {
+                "item_en": "cabin_air_filter",
+                "item_zh": "冷氣濾網",
+                "category": "空調",
+                "interval_km": 3000,
+                "next_due_mileage": 101877,
+                "service_type": "replace",
+                "service_history": [
+                    {
+                        "service_date": "2025-06-04",
+                        "service_mileage": 98877,
+                        "state": "ok",
+                        "note": "",
+                        "service_location": "",
+                        "cost": 0,
+                        "technician": "",
+                        "reminder": false
+                    }
+                ]
+            },
+            "engine_air_filter": {
+                "item_en": "engine_air_filter",
+                "item_zh": "引擎空氣濾網",
+                "category": "進氣系統",
+                "interval_km": 40000,
+                "next_due_mileage": 137724,
+                "service_type": "replace",
+                "service_history": [
+                    {
+                        "service_date": "2025-06-04",
+                        "service_mileage": 97724,
+                        "state": "ok",
+                        "note": "",
+                        "service_location": "",
+                        "cost": 0,
+                        "technician": "",
+                        "reminder": false
+                    }
+                ]
+            },
+            "spark_plugs": {
+                "item_en": "spark_plugs",
+                "item_zh": "火星塞",
+                "category": "引擎",
+                "interval_km": 40000,
+                "next_due_mileage": 150000,
+                "service_type": "replace",
+                "service_history": [
+                    {
+                        "service_date": "",
+                        "service_mileage": 80000,
+                        "state": "",
+                        "note": "更換火星塞",
+                        "service_location": "",
+                        "cost": 0,
+                        "technician": "",
+                        "reminder": false
+                    }
+                ]
+            },
+            "coolant": {
+                "item_en": "coolant",
+                "item_zh": "冷卻液",
+                "category": "冷卻系統",
+                "interval_km": 40000,
+                "next_due_mileage": 111807,
+                "service_type": "replace",
+                "service_history": [
+                    {
+                        "service_date": "2023-01-12",
+                        "service_mileage": 71807,
+                        "state": "ok",
+                        "note": "水箱水更新",
+                        "service_location": "",
+                        "cost": 800,
+                        "technician": "",
+                        "reminder": false
+                    }
+                ]
+            },
+            "battery": {
+                "item_en": "battery",
+                "item_zh": "電瓶",
+                "category": "電系",
+                "interval_km": "",
+                "next_due_mileage": "",
+                "service_type": "check",
+                "service_history": [
+                    {
+                        "service_date": "2023-09-23",
+                        "service_mileage": 76100,
+                        "state": "",
+                        "note": "廠牌：SUZUKI",
+                        "service_location": "",
+                        "cost": 2940,
+                        "technician": "",
+                        "reminder": false
+                    },
+                    {
+                        "service_date": "2025-09-24",
+                        "service_mileage": 101500,
+                        "state": "ok",
+                        "note": "更換品牌：power zone",
+                        "service_location": "",
+                        "cost": 1900,
+                        "technician": "",
+                        "reminder": false
+                    }
+                ]
+            },
+            "engine_mount": {
+                "item_en": "engine_mount",
+                "item_zh": "引擎腳",
+                "category": "底盤",
+                "interval_km": 80000,
+                "next_due_mileage": 177724,
+                "service_type": "check",
+                "service_history": [
+                    {
+                        "service_date": "",
+                        "service_mileage": 0,
+                        "state": "",
+                        "note": "",
+                        "service_location": "",
+                        "cost": 0,
+                        "technician": "",
+                        "reminder": false
+                    }
+                ]
+            },
+            "shock_absorbers": {
+                "item_en": "shock_absorbers",
+                "item_zh": "避震器",
+                "category": "底盤",
+                "interval_km": 80000,
+                "next_due_mileage": 177724,
+                "service_type": "check",
+                "service_history": [
+                    {
+                        "service_date": "",
+                        "service_mileage": 0,
+                        "state": "",
+                        "note": "",
+                        "service_location": "",
+                        "cost": 0,
+                        "technician": "",
+                        "reminder": false
+                    }
+                ]
+            },
+            "brake_fluid": {
+                "item_en": "brake_fluid",
+                "item_zh": "煞車油",
+                "category": "制動系統",
+                "interval_km": 30000,
+                "next_due_mileage": 101807,
+                "service_type": "replace",
+                "service_history": [
+                    {
+                        "service_date": "2023-01-12",
+                        "service_mileage": 71807,
+                        "state": "ok",
+                        "note": "",
+                        "service_location": "",
+                        "cost": 1500,
+                        "technician": "",
+                        "reminder": false
+                    }
+                ]
+            },
+            "fuel_injector": {
+                "item_en": "fuel_injector",
+                "item_zh": "噴油嘴",
+                "category": "進氣系統",
+                "interval_km": 40000,
+                "next_due_mileage": 137724,
+                "service_type": "check",
+                "service_history": [
+                    {
+                        "service_date": "",
+                        "service_mileage": 0,
+                        "state": "",
+                        "note": "",
+                        "service_location": "",
+                        "cost": 0,
+                        "technician": "",
+                        "reminder": false
+                    }
+                ]
+            },
+            "turbocharger": {
+                "item_en": "turbocharger",
+                "item_zh": "渦輪增壓器",
+                "category": "引擎",
+                "interval_km": 40000,
+                "next_due_mileage": 137724,
+                "service_type": "check",
+                "service_history": [
+                    {
+                        "service_date": "",
+                        "service_mileage": 0,
+                        "state": "",
+                        "note": "",
+                        "service_location": "",
+                        "cost": 0,
+                        "technician": "",
+                        "reminder": false
+                    }
+                ]
+            },
+            "exhaust_system": {
+                "item_en": "exhaust_system",
+                "item_zh": "排氣系統",
+                "category": "排氣系統",
+                "interval_km": 20000,
+                "next_due_mileage": 117724,
+                "service_type": "check",
+                "service_history": [
+                    {
+                        "service_date": "",
+                        "service_mileage": 0,
+                        "state": "",
+                        "note": "",
+                        "service_location": "",
+                        "cost": 0,
+                        "technician": "",
+                        "reminder": false
+                    }
+                ]
+            },
+            "light_bulb": {
+                "item_en": "light_bulb",
+                "item_zh": "車燈",
+                "category": "電系",
+                "interval_km": 10000,
+                "next_due_mileage": 107724,
+                "service_type": "check",
+                "service_history": [
+                    {
+                        "service_date": "",
+                        "service_mileage": 0,
+                        "state": "",
+                        "note": "",
+                        "service_location": "",
+                        "cost": 0,
+                        "technician": "",
+                        "reminder": false
+                    }
+                ]
+            },
+            "tires": {
+                "item_en": "tires",
+                "item_zh": "輪胎",
+                "category": "底盤",
+                "interval_km": 10000,
+                "next_due_mileage": 107724,
+                "service_type": "check",
+                "service_history": [
+                    {
+                        "service_date": "2021-10-21",
+                        "service_mileage": 45883,
+                        "state": "",
+                        "note": "輪胎更換",
+                        "service_location": "",
+                        "cost": 0,
+                        "technician": "",
+                        "reminder": false
+                    },
+                    {
+                        "service_date": "2025-10-03",
+                        "service_mileage": 102035,
+                        "state": "",
+                        "note": "前後調胎",
+                        "service_location": "",
+                        "cost": 0,
+                        "technician": "",
+                        "reminder": false
+                    }
+                ]
+            }
+        }
+    }
+]

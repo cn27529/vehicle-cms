@@ -1,44 +1,39 @@
 import { createRouter, createWebHistory } from "vue-router";
-import VehicleList from "@/views/VehicleList.vue";
-import VehicleDetail from "@/views/VehicleDetail.vue";
-import MaintenanceView from "@/views/MaintenanceView.vue";
-import MyCar from "@/views/MyCar.vue";
+import Dashboard from "../views/Dashboard.vue";
+import VehicleList from "../views/VehicleList.vue";
+import MaintenanceHistory from "../views/MaintenanceHistory.vue";
 
 const routes = [
   {
     path: "/",
-    redirect: "/admin/vehicles"
+    redirect: "/dashboard",
   },
   {
-    path: "/admin/vehicles",
+    path: "/dashboard",
+    name: "Dashboard",
+    component: Dashboard,
+  },
+  {
+    path: "/dashboard/:phone",
+    name: "DashboardByPhone",
+    component: Dashboard,
+    props: true,
+  },
+  {
+    path: "/vehicles",
     name: "VehicleList",
-    component: VehicleList
+    component: VehicleList,
   },
   {
-    path: "/admin/vehicles/:id",
-    name: "VehicleDetail",
-    component: VehicleDetail
+    path: "/maintenance",
+    name: "MaintenanceHistory",
+    component: MaintenanceHistory,
   },
-  {
-    path: "/admin/maintenance/:vehicleId",
-    name: "MaintenanceView",
-    component: MaintenanceView
-  },
-  {
-    path: "/myvehicles/:plateNumber",
-    name: "MyCar",
-    component: MyCar
-  },
-  {
-    path: "/mycar",
-    name: "MyCarDemo",
-    component: MyCar
-  }
 ];
 
 const router = createRouter({
   history: createWebHistory(),
-  routes
+  routes,
 });
 
 export default router;
