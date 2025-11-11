@@ -59,7 +59,7 @@
       </div>
 
       <!-- 车辆信息概览 -->
-      <div class="vehicle-overview" v-if="currentVehicle">
+      <div class="vehicle-overview" v-if="currentVehicle && Object.keys(currentVehicle).length > 0">
         <el-card shadow="never" class="overview-card">
           <div class="overview-content">
             <div class="vehicle-basic-info">
@@ -72,7 +72,7 @@
                 <span class="stat-label">總保養次數</span>
               </div>
               <div class="stat-item">
-                <span class="stat-value">¥{{ totalCost }}</span>
+                <span class="stat-value">¥{{ totalCost.toLocaleString() }}</span>
                 <span class="stat-label">總花費</span>
               </div>
               <div class="stat-item">
@@ -90,13 +90,17 @@
             v-for="record in filteredRecords"
             :key="record.item_en"
             :record="record"
+            :current-mileage="getCurrentMileage(currentVehicle)"
             @add-record="handleAddRecord"
             @edit-record="handleEditRecord"
           />
         </div>
         <div v-else class="empty-state">
-          <el-empty description="暫無保養記錄">
+          <el-empty description="暫無保養記錄" v-if="currentVehicle && Object.keys(currentVehicle).length > 0">
             <el-button type="primary" @click="addMaintenanceRecord">新增保養記錄</el-button>
+          </el-empty>
+          <el-empty description="請選擇車輛" v-else>
+            <el-button type="primary" @click="$router.push('/vehicles')">查看車輛列表</el-button>
           </el-empty>
         </div>
       </div>
@@ -115,7 +119,7 @@
               <div class="category-stat-item">
                 <div class="category-name">{{ stat.category }}</div>
                 <div class="category-count">{{ stat.count }} 次</div>
-                <div class="category-cost">¥{{ stat.cost }}</div>
+                <div class="category-cost">¥{{ stat.cost.toLocaleString() }}</div>
               </div>
             </el-col>
           </el-row>
@@ -128,6 +132,7 @@
 <script>
 import { ref, computed, onMounted, watch } from 'vue'
 import { useVehicleStore } from '../stores/vehicles'
+import { ElMessage } from 'element-plus'
 import MaintenanceRecord from '../components/MaintenanceRecord.vue'
 
 export default {
@@ -143,15 +148,15 @@ export default {
     
     const vehicles = computed(() => vehicleStore.allVehicles)
     const currentVehicle = computed(() => {
-      if (!selectedVehicleId.value) {
-        return vehicles.value[0] || {}
+      if (!selectedVehicleId.value && vehicles.value.length > 0) {
+        return vehicles.value[0]
       }
-      return vehicleStore.currentVehicle
+      return vehicleStore.currentVehicle || {}
     })
 
-    // 获取所有保养记录
+    // 安全地获取所有保养记录
     const allMaintenanceRecords = computed(() => {
-      if (!currentVehicle.value.maintenance_records) return []
+      if (!currentVehicle.value || !currentVehicle.value.maintenance_records) return []
       return Object.values(currentVehicle.value.maintenance_records)
     })
 
@@ -191,7 +196,7 @@ export default {
       return records
     })
 
-    // 统计信息
+    // 统计信息 - 安全处理
     const totalMaintenanceCount = computed(() => {
       let count = 0
       allMaintenanceRecords.value.forEach(record => {
@@ -263,7 +268,7 @@ export default {
 
     // 方法
     const getVehicleKey = (vehicle) => {
-      return vehicle.vehicle_info?.license_plate || vehicle.license_plate
+      return vehicle.vehicle_info?.license_plate || vehicle.license_plate || ''
     }
 
     const getVehicleLabel = (vehicle) => {
@@ -282,6 +287,7 @@ export default {
     }
 
     const getCurrentMileage = (vehicle) => {
+      if (!vehicle) return 0
       return vehicle.vehicle_info?.current_mileage || vehicle.current_mileage || 0
     }
 
@@ -290,37 +296,77 @@ export default {
       if (typeof date === 'string') {
         date = new Date(date)
       }
-      return date.toLocaleDateString('zh-TW')
+      try {
+        return date.toLocaleDateString('zh-TW')
+      } catch (error) {
+        console.warn('日期格式錯誤:', date, error)
+        return '日期格式錯誤'
+      }
+    }
+
+    // 處理 service_type 多重值 - 安全處理空陣列
+    const getServiceTypes = (serviceType) => {
+      if (!serviceType) return []
+      // 如果是陣列直接返回
+      if (Array.isArray(serviceType)) {
+        return serviceType.filter(type => type && type.trim().length > 0)
+      }
+      // 向後兼容：如果還是字串就分割
+      if (typeof serviceType === 'string') {
+        return serviceType.split('|').filter(type => type && type.trim().length > 0)
+      }
+      return []
+    }
+
+    const getServiceTypeTag = (serviceType) => {
+      const types = {
+        replace: "danger",
+        check: "warning",
+        clean: "success",
+        repair: "info",
+        inspect: "primary",
+        adjust: "success",
+        custom: "info",
+      }
+      return types[serviceType] || "info"
+    }
+
+    const getServiceTypeText = (serviceType) => {
+      const texts = {
+        replace: "更換",
+        check: "檢查",
+        clean: "清潔",
+        repair: "維修",
+        inspect: "檢測",
+        adjust: "調整",
+        custom: "自訂",
+      }
+      return texts[serviceType] || serviceType
     }
 
     const handleVehicleChange = () => {
-      vehicleStore.setSelectedVehicle(selectedVehicleId.value)
+      if (selectedVehicleId.value) {
+        vehicleStore.setSelectedVehicle(selectedVehicleId.value)
+      }
     }
 
     const handleCategoryChange = () => {
-      // 分类改变时自动更新显示
       console.log('分类筛选:', selectedCategory.value)
     }
 
     const handleDateChange = () => {
-      // 日期改变时自动更新显示
       console.log('日期筛选:', dateRange.value)
     }
 
     const handleAddRecord = (itemKey) => {
-      console.log('新增記錄:', itemKey)
-      // 这里可以打开新增记录的对话框
       ElMessage.info(`準備新增 ${itemKey} 的保養記錄`)
     }
 
     const handleEditRecord = (record) => {
-      console.log('編輯記錄:', record)
-      // 这里可以打开编辑记录的对话框
       ElMessage.info(`準備編輯 ${record.item_zh} 的記錄`)
     }
 
     const addMaintenanceRecord = () => {
-      console.log('新增保養記錄')
       ElMessage.info('準備新增保養記錄')
     }
 
@@ -357,6 +403,9 @@ export default {
       getVehicleModel,
       getCurrentMileage,
       formatDate,
+      getServiceTypes,
+      getServiceTypeTag,
+      getServiceTypeText,
       handleVehicleChange,
       handleCategoryChange,
       handleDateChange,

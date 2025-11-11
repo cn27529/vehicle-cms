@@ -3,57 +3,73 @@
     <el-card shadow="hover">
       <template #header>
         <div class="record-header">
-          <span class="record-title">{{ record.item_zh }}</span>
-          <div class="service-types" style="display: none;">
-            <el-tag 
-              v-for="serviceType in serviceTypes" 
+          <span class="record-title">{{ record.item_zh || "未知項目" }}</span>
+          <div class="service-types" v-if="hasServiceTypes">
+            <el-tag
+              v-for="serviceType in serviceTypes"
               :key="serviceType"
-              :type="getServiceTypeTag(serviceType)" 
+              :type="getServiceTypeTag(serviceType)"
               size="small"
               class="service-type-tag"
             >
               {{ getServiceTypeText(serviceType) }}
             </el-tag>
           </div>
+          <div class="no-service-types" v-else>
+            <el-tag type="info" size="small">未設定服務類型</el-tag>
+          </div>
         </div>
       </template>
-      
+
       <div class="record-content">
         <div class="record-info">
           <div class="info-row">
             <span class="info-label">分類：</span>
             <el-tag :type="getCategoryTagType(record.category)" size="small">
-              {{ record.category }}
+              {{ record.category || "未分類" }}
             </el-tag>
           </div>
-          <div class="info-row" v-if="record.interval_km && record.interval_km > 0">
+          <div
+            class="info-row"
+            v-if="record.interval_km && record.interval_km > 0"
+          >
             <span class="info-label">保養間隔：</span>
             <span>{{ record.interval_km.toLocaleString() }} km</span>
           </div>
-          <div class="info-row" v-if="record.next_due_mileage && record.next_due_mileage > 0">
+          <div
+            class="info-row"
+            v-if="record.next_due_mileage && record.next_due_mileage > 0"
+          >
             <span class="info-label">下次保養：</span>
             <span :class="getDueMileageClass(record.next_due_mileage)">
               {{ record.next_due_mileage.toLocaleString() }} km
             </span>
           </div>
-          <div class="info-row" v-if="record.service_type">
+          <div class="info-row">
             <span class="info-label">服務類型：</span>
-            <span class="service-type-text">{{ getServiceTypeDisplayText(record.service_type) }}</span>
+            <span class="service-type-text">{{
+              getServiceTypeDisplayText()
+            }}</span>
           </div>
         </div>
-        
+
         <div class="service-history">
           <div class="history-header">
             <span>服務記錄 ({{ serviceHistoryCount }})</span>
-            <el-button type="primary" text size="small" @click="addServiceRecord">
+            <el-button
+              type="primary"
+              text
+              size="small"
+              @click="addServiceRecord"
+            >
               <i class="el-icon-plus"></i>
               新增記錄
             </el-button>
           </div>
-          
+
           <div class="history-list">
-            <div 
-              v-for="(history, index) in sortedServiceHistory" 
+            <div
+              v-for="(history, index) in sortedServiceHistory"
               :key="getHistoryKey(history, index)"
               class="history-item"
             >
@@ -80,12 +96,16 @@
                 </div>
               </div>
               <div class="history-actions">
-                <el-button type="text" size="small" @click="editRecord(history)">
+                <el-button
+                  type="text"
+                  size="small"
+                  @click="editRecord(history)"
+                >
                   編輯
                 </el-button>
               </div>
             </div>
-            
+
             <div v-if="serviceHistoryCount === 0" class="empty-history">
               <i class="el-icon-document"></i>
               <p>暫無服務記錄</p>
@@ -113,15 +133,22 @@ export default {
     },
   },
   setup(props, { emit }) {
-    // 處理 service_type 多重值 - 安全處理
+    // 安全處理 service_type - 處理空陣列和未定義情況
     const serviceTypes = computed(() => {
       if (!props.record.service_type) return [];
-      try {
-        return props.record.service_type.split('|').filter(type => type && type.trim());
-      } catch (error) {
-        console.warn('解析服務類型錯誤:', error);
-        return [props.record.service_type];
+      if (Array.isArray(props.record.service_type)) {
+        return props.record.service_type.filter(type => type && type.trim().length > 0);
       }
+      // 向後兼容字串格式
+      if (typeof props.record.service_type === 'string') {
+        return props.record.service_type.split('|').filter(type => type && type.trim().length > 0);
+      }
+      return [];
+    });
+
+    // 檢查是否有有效的服務類型
+    const hasServiceTypes = computed(() => {
+      return serviceTypes.value.length > 0;
     });
 
     // 安全地處理 service_history
@@ -134,10 +161,11 @@ export default {
     });
 
     const sortedServiceHistory = computed(() => {
+      if (!serviceHistory.value || serviceHistory.value.length === 0) return [];
+      
       return serviceHistory.value
         .filter(history => history.service_date || history.service_mileage)
         .sort((a, b) => {
-          // 按日期排序，日期为空时按里程排序
           if (a.service_date && b.service_date) {
             return new Date(b.service_date) - new Date(a.service_date);
           }
@@ -151,6 +179,9 @@ export default {
         check: "warning",
         clean: "success",
         repair: "info",
+        inspect: "primary",
+        adjust: "success",
+        custom: "info",
       };
       return types[serviceType] || "info";
     };
@@ -161,23 +192,22 @@ export default {
         check: "檢查",
         clean: "清潔",
         repair: "維修",
+        inspect: "檢測",
+        adjust: "調整",
+        custom: "自訂",
       };
       return texts[serviceType] || serviceType;
     };
 
-    // 新增：獲取完整的服務類型顯示文字
-    const getServiceTypeDisplayText = (serviceType) => {
-      if (!serviceType) return '';
-      try {
-        const types = serviceType.split('|').filter(type => type && type.trim());
-        return types.map(type => getServiceTypeText(type)).join(' + ');
-      } catch (error) {
-        console.warn('解析服務類型顯示文字錯誤:', error);
-        return getServiceTypeText(serviceType);
-      }
+    // 獲取完整的服務類型顯示文字 - 安全處理
+    const getServiceTypeDisplayText = () => {
+      if (!hasServiceTypes.value) return '未設定';
+      return serviceTypes.value.map(type => getServiceTypeText(type)).join(' + ');
     };
 
+    // 其他方法保持不變...
     const getCategoryTagType = (category) => {
+      if (!category) return "info";
       const types = {
         "引擎": "danger",
         "傳動": "warning",
@@ -193,10 +223,8 @@ export default {
     };
 
     const getDueMileageClass = (nextDueMileage) => {
-      // 如果是电瓶，不显示里程相关提示
-      if (props.record.item_en === 'battery') {
-        return 'due-neutral';
-      }
+      if (!nextDueMileage || nextDueMileage <= 0) return 'due-neutral';
+      if (props.record.item_en === 'battery') return 'due-neutral';
       
       const currentMileage = props.currentMileage || 0;
       const mileageDiff = nextDueMileage - currentMileage;
@@ -207,6 +235,7 @@ export default {
     };
 
     const getStateTagType = (state) => {
+      if (!state) return "info";
       const types = {
         "ok": "success",
         "replace": "warning",
@@ -216,6 +245,7 @@ export default {
     };
 
     const getStateText = (state) => {
+      if (!state) return "";
       const texts = {
         "ok": "正常",
         "replace": "需更換",
@@ -226,11 +256,16 @@ export default {
 
     const formatDate = (dateString) => {
       if (!dateString) return "日期未知";
-      return new Date(dateString).toLocaleDateString("zh-TW");
+      try {
+        return new Date(dateString).toLocaleDateString("zh-TW");
+      } catch (error) {
+        console.warn('日期格式錯誤:', dateString, error);
+        return "日期格式錯誤";
+      }
     };
 
     const getHistoryKey = (history, index) => {
-      return `${history.service_date}-${history.service_mileage}-${index}`;
+      return `${history.service_date || ''}-${history.service_mileage || ''}-${index}`;
     };
 
     const addServiceRecord = () => {
@@ -246,6 +281,7 @@ export default {
 
     return {
       serviceTypes,
+      hasServiceTypes,
       serviceHistory,
       serviceHistoryCount,
       sortedServiceHistory,
@@ -287,6 +323,10 @@ export default {
   flex-wrap: wrap;
 }
 
+.no-service-types {
+  margin-left: 8px;
+}
+
 .service-type-tag {
   margin-left: 4px;
 }
@@ -315,8 +355,15 @@ export default {
 
 .service-type-text {
   font-size: 14px;
-  color: #409EFF;
+  color: #409eff;
   font-weight: 500;
+}
+
+/* 當沒有服務類型時的特殊樣式 */
+.service-type-text:empty::before {
+  content: "未設定";
+  color: #909399;
+  font-style: italic;
 }
 
 .due-soon {
@@ -433,33 +480,37 @@ export default {
     align-items: flex-start;
     gap: 8px;
   }
-  
+
   .service-types {
     align-self: flex-start;
   }
-  
+
+  .no-service-types {
+    margin-left: 8px;
+  }
+
   .history-item {
     flex-direction: column;
   }
-  
+
   .history-date {
     min-width: auto;
     margin-bottom: 8px;
   }
-  
+
   .history-details {
     margin: 0 0 8px 0;
     width: 100%;
   }
-  
+
   .history-actions {
     align-self: flex-end;
   }
-  
+
   .info-row {
     flex-wrap: wrap;
   }
-  
+
   .info-label {
     min-width: 60px;
   }

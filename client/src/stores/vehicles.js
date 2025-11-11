@@ -85,7 +85,7 @@ export const useVehicleStore = defineStore("vehicles", () => {
           category: getItemCategory(itemKey),
           interval_km: 0,
           next_due_mileage: 0,
-          service_type: "replace",
+          service_type: ["check"], // 默認改為陣列
           service_history: [],
         };
       }

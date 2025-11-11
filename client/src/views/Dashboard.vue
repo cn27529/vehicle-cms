@@ -1,5 +1,34 @@
 <template>
   <div class="dashboard-container">
+    <!-- 车主信息显示 -->
+    <div v-if="ownerPhone" class="owner-info">
+      <el-card shadow="never">
+        <div class="owner-content">
+          <div class="owner-avatar">
+            <el-avatar :size="60" :src="ownerAvatar">
+              {{ ownerName.charAt(0) }}
+            </el-avatar>
+          </div>
+          <div class="owner-details">
+            <h3>{{ ownerName }}</h3>
+            <p class="owner-phone">
+              <i class="el-icon-phone"></i>
+              {{ ownerPhone }}
+            </p>
+            <p class="vehicle-count">
+              共 {{ filteredVehicles.length }} 台車輛
+            </p>
+          </div>
+          <div class="owner-actions">
+            <el-button type="primary" @click="contactOwner">
+              <i class="el-icon-phone"></i>
+              聯繫車主
+            </el-button>
+          </div>
+        </div>
+      </el-card>
+    </div>
+
     <!-- 顶部车辆选择器 -->
     <div class="vehicle-selector">
       <el-select 
@@ -77,7 +106,7 @@
           <el-card class="dashboard-section" shadow="hover">
             <template #header>
               <div class="section-header">
-                <el-icon><Warning /></el-icon>
+                <i class="el-icon-warning-outline"></i>
                 <span>即将到期保养项目</span>
                 <el-tag type="danger" size="small">{{ upcomingServicesCount }} 项</el-tag>
               </div>
@@ -101,7 +130,7 @@
                 </div>
               </div>
               <div v-if="upcomingServices.length === 0" class="empty-state">
-                <el-icon><SuccessFilled /></el-icon>
+                <i class="el-icon-success"></i>
                 <p>暂无即将到期的保养项目</p>
               </div>
             </div>
@@ -111,7 +140,7 @@
           <el-card class="dashboard-section" shadow="hover">
             <template #header>
               <div class="section-header">
-                <el-icon><Timer /></el-icon>
+                <i class="el-icon-time"></i>
                 <span>近期保养记录</span>
                 <el-tag type="info" size="small">{{ recentServices.length }} 笔</el-tag>
               </div>
@@ -134,7 +163,7 @@
                 </div>
               </div>
               <div v-if="recentServices.length === 0" class="empty-state">
-                <el-icon><Document /></el-icon>
+                <i class="el-icon-document"></i>
                 <p>暂无近期保养记录</p>
               </div>
             </div>
@@ -147,7 +176,7 @@
           <el-card class="dashboard-section" shadow="hover">
             <template #header>
               <div class="section-header">
-                <el-icon><Bell /></el-icon>
+                <i class="el-icon-bell"></i>
                 <span>保养提醒</span>
               </div>
             </template>
@@ -167,7 +196,7 @@
                 </div>
               </div>
               <div v-if="maintenanceReminders.length === 0" class="empty-state">
-                <el-icon><SuccessFilled /></el-icon>
+                <i class="el-icon-success"></i>
                 <p>暂无保养提醒</p>
               </div>
             </div>
@@ -177,20 +206,23 @@
           <el-card class="dashboard-section" shadow="hover">
             <template #header>
               <div class="section-header">
-              <el-icon><Warning /></el-icon>
+                <el-icon><Warning /></el-icon>
                 <span>未曾保养项目</span>
                 <el-tag type="warning" size="small">{{ neverMaintainedItems.length }} 项</el-tag>
               </div>
             </template>
-            <div class="service-list never-maintained">
+            <div class="service-list">
               <div 
                 v-for="item in neverMaintainedItems" 
                 :key="item.item_en"
                 class="service-item never-maintained"
               >
+                <div class="service-icon">
+                  <el-icon><Warning /></el-icon>
+                </div>
                 <div class="service-info">
                   <div class="service-name">{{ item.item_zh }}</div>
-                  <div style="display: none;" class="service-type">
+                  <div class="service-type" v-if="getServiceTypes(item.service_type).length > 0">
                     <el-tag 
                       v-for="serviceType in getServiceTypes(item.service_type)" 
                       :key="serviceType"
@@ -201,10 +233,13 @@
                       {{ getServiceTypeText(serviceType) }}
                     </el-tag>
                   </div>
+                  <div class="no-service-types" v-else>
+                    <el-tag type="info" size="mini">未設定服務類型</el-tag>
+                  </div>
                 </div>
                 <div class="service-category">
                   <el-tag :type="getCategoryTagType(item.category)" size="small">
-                    {{ item.category }}
+                    {{ item.category || '未分類' }}
                   </el-tag>
                 </div>
               </div>
@@ -219,21 +254,21 @@
           <el-card class="dashboard-section" shadow="hover">
             <template #header>
               <div class="section-header">
-                <el-icon><Operation /></el-icon>
+                <i class="el-icon-operation"></i>
                 <span>快速操作</span>
               </div>
             </template>
             <div class="quick-actions">
               <el-button type="primary" class="quick-action-btn" @click="addMaintenanceRecord">
-                <el-icon><Plus /></el-icon>
+                <i class="el-icon-plus"></i>
                 新增保养记录
               </el-button>
-              <el-button type="" class="quick-action-btn" @click="updateMileage">
-                <el-icon><Edit /></el-icon>
+              <el-button class="quick-action-btn" @click="updateMileage">
+                <i class="el-icon-edit"></i>
                 更新里程
               </el-button>
               <el-button class="quick-action-btn" @click="viewAllRecords">
-                <el-icon><Document /></el-icon>
+                <i class="el-icon-document"></i>
                 查看所有记录
               </el-button>
             </div>
@@ -257,17 +292,15 @@ import { useRoute, useRouter } from 'vue-router'
 import { useVehicleStore } from '../stores/vehicles'
 import VehicleInfo from '../components/VehicleInfo.vue'
 import StatCard from '../components/StatCard.vue'
-import { Plus } from '@element-plus/icons-vue'
-import { Edit } from '@element-plus/icons-vue'
-import { Warning } from '@element-plus/icons-vue'
-import { Timer } from '@element-plus/icons-vue'
-import { Document } from '@element-plus/icons-vue'
+import { Warning, SuccessFilled } from '@element-plus/icons-vue'
 
 export default {
   name: 'Dashboard',
   components: {
     VehicleInfo,
-    StatCard
+    StatCard,
+    Warning,
+    SuccessFilled
   },
   props: {
     phone: {
@@ -465,6 +498,7 @@ export default {
     })
 
     const getCategoryTagType = (category) => {
+      if (!category) return "info"
       const types = {
         '引擎': 'danger',
         '傳動': 'warning',
@@ -494,13 +528,26 @@ export default {
 
     const formatDate = (dateString) => {
       if (!dateString) return '未知日期'
-      return new Date(dateString).toLocaleDateString('zh-CN')
+      try {
+        return new Date(dateString).toLocaleDateString('zh-CN')
+      } catch (error) {
+        console.warn('日期格式錯誤:', dateString, error)
+        return '日期格式錯誤'
+      }
     }
 
-    // 新增方法：处理 service_type 多重值
+    // 處理 service_type 多重值 - 安全處理空陣列
     const getServiceTypes = (serviceType) => {
       if (!serviceType) return []
-      return serviceType.split('|').filter(type => type.trim())
+      // 如果是陣列直接返回
+      if (Array.isArray(serviceType)) {
+        return serviceType.filter(type => type && type.trim().length > 0)
+      }
+      // 向後兼容：如果還是字串就分割
+      if (typeof serviceType === 'string') {
+        return serviceType.split('|').filter(type => type && type.trim().length > 0)
+      }
+      return []
     }
 
     const getServiceTypeTag = (serviceType) => {
@@ -509,6 +556,9 @@ export default {
         check: "warning",
         clean: "success",
         repair: "info",
+        inspect: "primary",
+        adjust: "success",
+        custom: "info",
       }
       return types[serviceType] || "info"
     }
@@ -519,6 +569,9 @@ export default {
         check: "檢查",
         clean: "清潔",
         repair: "維修",
+        inspect: "檢測",
+        adjust: "調整",
+        custom: "自訂",
       }
       return texts[serviceType] || serviceType
     }
@@ -549,6 +602,23 @@ export default {
       router.push('/vehicles')
     }
 
+    const contactOwner = () => {
+      if (ownerPhone.value) {
+        window.location.href = `tel:${ownerPhone.value}`
+      }
+    }
+
+    const ownerName = computed(() => {
+      if (ownerPhone.value) {
+        return vehicleStore.getOwnerNameByPhone(ownerPhone.value)
+      }
+      return currentVehicle.value.vehicle_info?.name || currentVehicle.value.name || '車主'
+    })
+
+    const ownerAvatar = computed(() => {
+      return ''
+    })
+
     // 生命周期
     onMounted(() => {
       if (vehicles.value.length > 0) {
@@ -568,6 +638,8 @@ export default {
     return {
       selectedVehicleId,
       ownerPhone,
+      ownerName,
+      ownerAvatar,
       vehicles,
       filteredVehicles,
       currentVehicle,
@@ -596,7 +668,8 @@ export default {
       addMaintenanceRecord,
       updateMileage,
       viewAllRecords,
-      goToVehicleList
+      goToVehicleList,
+      contactOwner
     }
   }
 }
@@ -678,11 +751,7 @@ export default {
   display: flex;
   align-items: center;
   font-weight: 600;
-}
-
-.section-header i {
-  margin-right: 8px;
-  font-size: 18px;
+  gap: 8px;
 }
 
 .service-list {
@@ -716,6 +785,13 @@ export default {
   color: #909399;
 }
 
+.service-note {
+  font-size: 12px;
+  color: #909399;
+  margin-top: 4px;
+  font-style: italic;
+}
+
 .service-category, .service-cost {
   margin-left: 15px;
 }
@@ -724,11 +800,14 @@ export default {
   text-align: center;
   padding: 40px 0;
   color: #c0c4cc;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
 }
 
 .empty-state i {
   font-size: 48px;
-  margin-bottom: 16px;
 }
 
 .reminder-list {
@@ -783,52 +862,36 @@ export default {
   margin-left: 12px;
 }
 
-.other-vehicles {
-  display: flex;
-  flex-direction: column;
-  gap: 12px;
-}
-
-.other-vehicle-item {
+/* 未曾保养项目特殊样式 */
+.service-item.never-maintained {
+  border-left: 3px solid #e6a23c;
+  background-color: #fdf6ec;
   display: flex;
   align-items: center;
   padding: 12px;
-  border: 1px solid #ebeef5;
-  border-radius: 6px;
-  cursor: pointer;
-  transition: all 0.3s ease;
 }
 
-.other-vehicle-item:hover {
-  border-color: #409EFF;
-  background-color: #f0f7ff;
-}
-
-.other-vehicle-item.active {
-  border-color: #409EFF;
-  background-color: #ecf5ff;
-}
-
-.vehicle-icon {
-  width: 40px;
-  height: 40px;
-  border-radius: 6px;
-  background: #409EFF;
+.service-icon {
+  margin-right: 12px;
+  color: #e6a23c;
+  font-size: 16px;
   display: flex;
   align-items: center;
-  justify-content: center;
-  margin-right: 12px;
-  color: white;
 }
 
-.vehicle-name {
-  font-weight: 500;
-  margin-bottom: 4px;
+.service-type {
+  display: flex;
+  gap: 4px;
+  margin-top: 4px;
+  flex-wrap: wrap;
 }
 
-.vehicle-details {
-  font-size: 12px;
-  color: #909399;
+.service-type-tag {
+  margin-right: 4px;
+}
+
+.no-service-types {
+  margin-top: 4px;
 }
 
 .quick-actions {
@@ -848,42 +911,6 @@ export default {
   justify-content: center;
   align-items: center;
   min-height: 400px;
-}
-
-.service-note {
-  font-size: 12px;
-  color: #909399;
-  margin-top: 4px;
-  font-style: italic;
-}
-
-.service-type {
-  display: flex;
-  gap: 4px;
-  margin-top: 4px;
-  flex-wrap: wrap;
-}
-
-.service-type-tag {
-  margin-right: 4px;
-}
-
-
-/* 为未曾保养项目添加特殊样式 */
-.service-list.never-maintained {
-  display: flex;
-  flex-direction: column;
-  gap: 16px;
-}
-
-.service-item.never-maintained {
-  display: flex;
-  align-items: center;
-  padding: 16px;
-  background: #f8f9fa;
-  border-radius: 8px;
-  border-left: 4px solid #e3e3e3;
-  color: #e3e3e3;
 }
 
 /* 响应式设计 */
@@ -917,12 +944,21 @@ export default {
     align-items: flex-start;
   }
   
+  .service-item.never-maintained {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+  
+  .service-icon {
+    margin-right: 0;
+    margin-bottom: 8px;
+  }
+  
   .service-category, .service-cost {
     margin-left: 0;
     margin-top: 8px;
   }
   
-  /* 保养提醒 */
   .reminder-item {
     flex-direction: column;
     align-items: flex-start;
@@ -938,13 +974,8 @@ export default {
     width: 100%;
   }
   
-  .other-vehicle-item {
-    padding: 10px;
-  }
-
   .service-type {
     justify-content: flex-start;
   }
-
 }
 </style>
