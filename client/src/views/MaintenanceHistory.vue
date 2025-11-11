@@ -520,6 +520,7 @@ export default {
   border: 1px solid #ebeef5;
   border-radius: 6px;
   background: #fafafa;
+  margin-bottom: 16px;
 }
 
 .category-name {
@@ -580,6 +581,7 @@ export default {
   
   .category-stat-item {
     padding: 12px;
+    margin-bottom: 12px;
   }
 }
 </style>

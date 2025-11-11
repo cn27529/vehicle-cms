@@ -1,5 +1,4 @@
 [
-    
     {
         "vehicle_info": {
             "brand": "Suzuki",
@@ -24,22 +23,24 @@
                 "category": "引擎",
                 "interval_km": 7500,
                 "next_due_mileage": 113650,
-                "service_type": ["replace"],
+                "service_type": [
+                    "replace"
+                ],
                 "service_history": [
                     {
                         "service_date": "2024-11-22",
                         "service_mileage": 99150,
                         "state": "ok",
-                        "note": "",
+                        "note": "外廠保養，換油工資300，機油1350，沒有換濾芯",
                         "service_location": "",
-                        "cost": 1200,
+                        "cost": 1650,
                         "technician": "",
                         "reminder": true
                     },
                     {
                         "service_date": "2025-10-03",
                         "service_mileage": 102035,
-                        "state": "",
+                        "state": "ok",
                         "note": "濾芯、墊片、油塞、原廠保養",
                         "service_location": "",
                         "cost": 2850,
@@ -54,7 +55,9 @@
                 "category": "傳動",
                 "interval_km": 40000,
                 "next_due_mileage": 137667,
-                "service_type": ["replace"],
+                "service_type": [
+                    "replace"
+                ],
                 "service_history": [
                     {
                         "service_date": "2025-03-21",
@@ -74,13 +77,15 @@
                 "category": "空調",
                 "interval_km": 10000,
                 "next_due_mileage": 109877,
-                "service_type": ["replace"],
+                "service_type": [
+                    "replace"
+                ],
                 "service_history": [
                     {
                         "service_date": "2025-06-04",
                         "service_mileage": 98877,
                         "state": "ok",
-                        "note": "自己DIY",
+                        "note": "DIY",
                         "service_location": "",
                         "cost": 0,
                         "technician": "",
@@ -94,13 +99,15 @@
                 "category": "進氣系統",
                 "interval_km": 40000,
                 "next_due_mileage": 137724,
-                "service_type": ["replace"],
+                "service_type": [
+                    "replace"
+                ],
                 "service_history": [
                     {
                         "service_date": "2025-06-04",
                         "service_mileage": 97724,
                         "state": "ok",
-                        "note": "",
+                        "note": "DIY",
                         "service_location": "",
                         "cost": 0,
                         "technician": "",
@@ -114,7 +121,9 @@
                 "category": "引擎",
                 "interval_km": 40000,
                 "next_due_mileage": 150000,
-                "service_type": ["replace"],
+                "service_type": [
+                    "replace"
+                ],
                 "service_history": [
                     {
                         "service_date": "",
@@ -134,7 +143,9 @@
                 "category": "冷卻系統",
                 "interval_km": 40000,
                 "next_due_mileage": 111807,
-                "service_type": ["replace"],
+                "service_type": [
+                    "replace"
+                ],
                 "service_history": [
                     {
                         "service_date": "2023-01-12",
@@ -154,7 +165,9 @@
                 "category": "電系",
                 "interval_km": 0,
                 "next_due_mileage": 0,
-                "service_type": ["check"],
+                "service_type": [
+                    "check"
+                ],
                 "service_history": [
                     {
                         "service_date": "2023-09-23",
@@ -184,7 +197,9 @@
                 "category": "底盤",
                 "interval_km": 80000,
                 "next_due_mileage": 177724,
-                "service_type": ["check"],
+                "service_type": [
+                    "check"
+                ],
                 "service_history": [
                     {
                         "service_date": "",
@@ -204,7 +219,9 @@
                 "category": "底盤",
                 "interval_km": 80000,
                 "next_due_mileage": 177724,
-                "service_type": ["check"],
+                "service_type": [
+                    "check"
+                ],
                 "service_history": [
                     {
                         "service_date": "",
@@ -224,7 +241,10 @@
                 "category": "制動系統",
                 "interval_km": 30000,
                 "next_due_mileage": 101807,
-                "service_type": ["check","replace"],
+                "service_type": [
+                    "check",
+                    "replace"
+                ],
                 "service_history": [
                     {
                         "service_date": "2023-01-12",
@@ -244,7 +264,10 @@
                 "category": "進氣系統",
                 "interval_km": 40000,
                 "next_due_mileage": 137724,
-                "service_type": ["check", "clean"],
+                "service_type": [
+                    "check",
+                    "clean"
+                ],
                 "service_history": []
             },
             "air_flow_sensor": {
@@ -253,7 +276,9 @@
                 "category": "進氣系統",
                 "interval_km": 30000,
                 "next_due_mileage": 131000,
-                "service_type": ["clean"],
+                "service_type": [
+                    "clean"
+                ],
                 "service_history": [
                     {
                         "service_date": "2025-09-28",
@@ -273,7 +298,9 @@
                 "category": "引擎",
                 "interval_km": 40000,
                 "next_due_mileage": 137724,
-                "service_type": ["check"],
+                "service_type": [
+                    "check"
+                ],
                 "service_history": [
                     {
                         "service_date": "",
@@ -293,7 +320,9 @@
                 "category": "排氣系統",
                 "interval_km": 20000,
                 "next_due_mileage": 117724,
-                "service_type": ["check"],
+                "service_type": [
+                    "check"
+                ],
                 "service_history": [
                     {
                         "service_date": "",
@@ -313,12 +342,16 @@
                 "category": "電系",
                 "interval_km": 30000,
                 "next_due_mileage": 0,
-                "service_type": ["check"],
+                "service_type": [
+                    "check"
+                ],
                 "service_history": [
                     {
                         "service_date": "2024-10-08",
                         "service_mileage": 90000,
-                        "state": ["replace"],
+                        "state": [
+                            "replace"
+                        ],
                         "note": "更換LED車燈",
                         "service_location": "",
                         "cost": 500,
@@ -333,7 +366,9 @@
                 "category": "底盤",
                 "interval_km": 10000,
                 "next_due_mileage": 107724,
-                "service_type": ["check"],
+                "service_type": [
+                    "check"
+                ],
                 "service_history": [
                     {
                         "service_date": "2021-10-21",
@@ -363,11 +398,12 @@
                 "category": "未分類",
                 "interval_km": 0,
                 "next_due_mileage": 0,
-                "service_type": ["custom"],
+                "service_type": [
+                    "custom"
+                ],
                 "service_history": []
             }
         }
-        
     },
     {
         "vehicle_info": {
@@ -393,29 +429,10 @@
                 "category": "引擎",
                 "interval_km": 10000,
                 "next_due_mileage": 341000,
-                "service_type": ["replace"],
-                "service_history": [
-                    {
-                        "service_date": "2024-11-22",
-                        "service_mileage": 99150,
-                        "state": "ok",
-                        "note": "",
-                        "service_location": "",
-                        "cost": 1200,
-                        "technician": "",
-                        "reminder": true
-                    },
-                    {
-                        "service_date": "2025-09-09",
-                        "service_mileage": 331000,
-                        "state": "",
-                        "note": "濾芯、墊片、油塞、原廠保養",
-                        "service_location": "",
-                        "cost": 4850,
-                        "technician": "",
-                        "reminder": true
-                    }
-                ]
+                "service_type": [
+                    "replace"
+                ],
+                "service_history": []
             },
             "transmission_fluid": {
                 "item_en": "transmission_fluid",
@@ -423,7 +440,9 @@
                 "category": "傳動",
                 "interval_km": 40000,
                 "next_due_mileage": 137667,
-                "service_type": ["replace"],
+                "service_type": [
+                    "replace"
+                ],
                 "service_history": []
             },
             "cabin_air_filter": {
@@ -432,7 +451,9 @@
                 "category": "空調",
                 "interval_km": 3000,
                 "next_due_mileage": 101877,
-                "service_type": ["replace"],
+                "service_type": [
+                    "replace"
+                ],
                 "service_history": []
             },
             "engine_air_filter": {
@@ -441,7 +462,9 @@
                 "category": "進氣系統",
                 "interval_km": 40000,
                 "next_due_mileage": 137724,
-                "service_type": ["replace"],
+                "service_type": [
+                    "replace"
+                ],
                 "service_history": []
             },
             "spark_plugs": {
@@ -450,7 +473,9 @@
                 "category": "引擎",
                 "interval_km": 40000,
                 "next_due_mileage": 150000,
-                "service_type": ["replace"],
+                "service_type": [
+                    "replace"
+                ],
                 "service_history": []
             },
             "coolant": {
@@ -459,7 +484,9 @@
                 "category": "冷卻系統",
                 "interval_km": 40000,
                 "next_due_mileage": 111807,
-                "service_type": ["replace"],
+                "service_type": [
+                    "replace"
+                ],
                 "service_history": []
             },
             "battery": {
@@ -468,7 +495,9 @@
                 "category": "電系",
                 "interval_km": 0,
                 "next_due_mileage": 0,
-                "service_type": ["check"],
+                "service_type": [
+                    "check"
+                ],
                 "service_history": []
             },
             "engine_mount": {
@@ -477,7 +506,9 @@
                 "category": "底盤",
                 "interval_km": 80000,
                 "next_due_mileage": 177724,
-                "service_type": ["check"],
+                "service_type": [
+                    "check"
+                ],
                 "service_history": [
                     {
                         "service_date": "",
@@ -497,7 +528,9 @@
                 "category": "底盤",
                 "interval_km": 80000,
                 "next_due_mileage": 177724,
-                "service_type": ["check"],
+                "service_type": [
+                    "check"
+                ],
                 "service_history": [
                     {
                         "service_date": "",
@@ -517,7 +550,9 @@
                 "category": "制動系統",
                 "interval_km": 30000,
                 "next_due_mileage": 101807,
-                "service_type": ["replace"],
+                "service_type": [
+                    "replace"
+                ],
                 "service_history": [
                     {
                         "service_date": "2023-01-12",
@@ -537,7 +572,9 @@
                 "category": "進氣系統",
                 "interval_km": 40000,
                 "next_due_mileage": 0,
-                "service_type": ["check"],
+                "service_type": [
+                    "check"
+                ],
                 "service_history": []
             },
             "air_flow_sensor": {
@@ -555,7 +592,9 @@
                 "category": "引擎",
                 "interval_km": 40000,
                 "next_due_mileage": 137724,
-                "service_type": ["check"],
+                "service_type": [
+                    "check"
+                ],
                 "service_history": [
                     {
                         "service_date": "",
@@ -575,7 +614,9 @@
                 "category": "排氣系統",
                 "interval_km": 20000,
                 "next_due_mileage": 117724,
-                "service_type": ["check"],
+                "service_type": [
+                    "check"
+                ],
                 "service_history": [
                     {
                         "service_date": "",
@@ -595,7 +636,9 @@
                 "category": "電系",
                 "interval_km": 10000,
                 "next_due_mileage": 107724,
-                "service_type": ["check"],
+                "service_type": [
+                    "check"
+                ],
                 "service_history": [
                     {
                         "service_date": "",
@@ -615,7 +658,9 @@
                 "category": "底盤",
                 "interval_km": 10000,
                 "next_due_mileage": 107724,
-                "service_type": ["check"],
+                "service_type": [
+                    "check"
+                ],
                 "service_history": []
             },
             "others": {
@@ -624,13 +669,11 @@
                 "category": "未分類",
                 "interval_km": 0,
                 "next_due_mileage": 0,
-                "service_type": ["custom"],
+                "service_type": [
+                    "custom"
+                ],
                 "service_history": []
             }
         }
     }
-    
 ]
-
-
-

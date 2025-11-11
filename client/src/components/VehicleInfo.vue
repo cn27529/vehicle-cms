@@ -2,9 +2,11 @@
   <el-card class="vehicle-info-card" shadow="hover">
     <template #header>
       <div class="card-header">
-        <el-icon><Edit /></el-icon>
         <span>車輛資訊</span>
-        <el-button type="primary" text @click="editVehicle">編輯</el-button>
+        <el-button type="primary" text @click="editVehicle">
+          <el-icon><Edit /></el-icon>
+          編輯
+        </el-button>
       </div>
     </template>
     
