@@ -9,7 +9,8 @@
     "preview": "vite preview",
     "serve": "npx vue-cli-service serve",
     "build:analyze": "npx vue-cli-service build --report",
-    "analyze": "npm run build:analyze && open dist/stats.html"
+    "analyze": "npm run build:analyze && open dist/stats.html",
+    "build:full": "npm run build:analyze && build"
   },
   "dependencies": {
     "@element-plus/icons-vue": "^2.3.1",
