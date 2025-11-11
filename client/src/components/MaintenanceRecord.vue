@@ -45,7 +45,7 @@
               {{ record.next_due_mileage.toLocaleString() }} km
             </span>
           </div>
-          <div class="info-row">
+          <div class="info-row" style="display: none;">
             <span class="info-label">服務類型：</span>
             <span class="service-type-text">{{
               getServiceTypeDisplayText()
