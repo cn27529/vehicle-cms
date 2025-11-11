@@ -89,7 +89,7 @@
                 <div class="history-cost" v-if="history.cost > 0">
                   ¥{{ history.cost }}
                 </div>
-                <div class="history-state" v-if="history.state">
+                <div class="history-state" v-if="history.state" style="display: none;">
                   <el-tag :type="getStateTagType(history.state)" size="small">
                     {{ getStateText(history.state) }}
                   </el-tag>
