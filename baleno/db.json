@@ -1,0 +1,147 @@
+{
+  "vehicles": [
+    {
+      "vehicle_info": {
+        "brand": "Suzuki",
+        "model": "BALENO",
+        "year": 2018,
+        "engine_code": "K10C",
+        "color": "blue",
+        "manufacture_date": "2019-03-28",
+        "current_mileage": 106150,
+        "license_plate": "BDE-9373",
+        "purchase_price": 250001,
+        "purchase_date": "2024-06-05",
+        "vin": "MA3EWB42500468048",
+        "last_updated": "2025-11-10",
+        "id": "BDE-9373"
+      },
+      "id": "BDE-9373"
+    },
+    {
+      "id": "ABC-1234",
+      "vehicle_info": {
+        "brand": "Toyota",
+        "model": "COROLLA CROSS",
+        "year": 2022,
+        "engine_code": "2ZR-FE",
+        "color": "white",
+        "manufacture_date": "2022-05-15",
+        "current_mileage": 32500,
+        "license_plate": "ABC-1234",
+        "purchase_price": 850000,
+        "purchase_date": "2022-06-20",
+        "vin": "JTEBU5JR9M5123456",
+        "last_updated": "2025-09-28"
+      },
+      "maintenance_records": [
+        {
+          "id": 1001,
+          "item_en": "engine_oil",
+          "item_zh": "引擎機油",
+          "category": "引擎",
+          "interval_km": 10000,
+          "next_due_mileage": 42500,
+          "service_type": "replace",
+          "service_history": [
+            {
+              "id": 10001,
+              "service_date": "2023-01-15",
+              "service_mileage": 10000,
+              "status": "ok",
+              "note": "首次保養",
+              "service_location": "Toyota原廠",
+              "cost": 0,
+              "technician": "林技師",
+              "reminder": false
+            },
+            {
+              "id": 10002,
+              "service_date": "2023-07-20",
+              "service_mileage": 20000,
+              "status": "ok",
+              "note": "定期保養",
+              "service_location": "Toyota原廠",
+              "cost": 2500,
+              "technician": "林技師",
+              "reminder": false
+            }
+          ]
+        },
+        {
+          "id": 1002,
+          "item_en": "tire_replace",
+          "item_zh": "輪胎更換",
+          "category": "底盤",
+          "interval_km": 50000,
+          "next_due_mileage": 70000,
+          "service_type": "replace",
+          "service_history": []
+        }
+      ]
+    },
+    {
+      "id": "XYZ-5678",
+      "vehicle_info": {
+        "brand": "Honda",
+        "model": "CR-V",
+        "year": 2020,
+        "engine_code": "L15B7",
+        "color": "black",
+        "manufacture_date": "2020-08-10",
+        "current_mileage": 58700,
+        "license_plate": "XYZ-5678",
+        "purchase_price": 1100000,
+        "purchase_date": "2020-09-05",
+        "vin": "5J6RE4H44L0123456",
+        "last_updated": "2025-10-01"
+      },
+      "maintenance_records": [
+        {
+          "id": 2001,
+          "item_en": "engine_oil",
+          "item_zh": "引擎機油",
+          "category": "引擎",
+          "interval_km": 10000,
+          "next_due_mileage": 68700,
+          "service_type": "replace",
+          "service_history": [
+            {
+              "id": 20001,
+              "service_date": "2025-09-28",
+              "service_mileage": 58700,
+              "status": "ok",
+              "note": "定期保養",
+              "service_location": "Honda原廠",
+              "cost": 3200,
+              "technician": "黃技師",
+              "reminder": false
+            }
+          ]
+        },
+        {
+          "id": 2002,
+          "item_en": "brake_fluid",
+          "item_zh": "煞車油",
+          "category": "制動系統",
+          "interval_km": 30000,
+          "next_due_mileage": 88700,
+          "service_type": "replace",
+          "service_history": [
+            {
+              "id": 20002,
+              "service_date": "2024-05-15",
+              "service_mileage": 38700,
+              "status": "ok",
+              "note": "煞車油更換",
+              "service_location": "Honda原廠",
+              "cost": 1800,
+              "technician": "黃技師",
+              "reminder": false
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

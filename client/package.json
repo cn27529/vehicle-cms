@@ -10,13 +10,17 @@
     "serve": "npx vue-cli-service serve",
     "build:analyze": "npx vue-cli-service build --report",
     "analyze": "npm run build:analyze && open dist/stats.html",
-    "build:full": "npm run build:analyze && build"
+    "build:full": "npm run build:analyze && build",
+    "server": "json-server --watch db.json --port 3001",
+    "dev:full": "concurrently \"npm run server\" \"npm run dev\""
   },
   "dependencies": {
     "@element-plus/icons-vue": "^2.3.1",
-    "axios": "^1.6.2",
     "echarts": "^5.4.3",
     "element-plus": "^2.4.1",
+    "dayjs": "^1.11.10",
+    "axios": "^1.6.2",
+    "json-server": "^1.0.0-beta.3",
     "pinia": "^2.1.7",
     "vue": "^3.3.11",
     "vue-router": "^4.2.5"
@@ -25,6 +29,7 @@
     "@vitejs/plugin-vue": "^4.5.2",
     "@vue/cli-service": "^5.0.9",
     "@vue/compiler-sfc": "^3.5.24",
+    "concurrently": "^9.2.1",
     "vite": "^5.0.8",
     "webpack-bundle-analyzer": "^4.10.2"
   }

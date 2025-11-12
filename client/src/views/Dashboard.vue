@@ -1,287 +1,309 @@
 <template>
   <div class="dashboard-container">
-    <!-- 车主信息显示 -->
-    <div v-if="ownerPhone" class="owner-info">
-      <el-card shadow="never">
-        <div class="owner-content">
-          <div class="owner-avatar">
-            <el-avatar :size="60" :src="ownerAvatar">
-              {{ ownerName.charAt(0) }}
-            </el-avatar>
-          </div>
-          <div class="owner-details">
-            <h3>{{ ownerName }}</h3>
-            <p class="owner-phone">
-              <i class="el-icon-phone"></i>
-              {{ ownerPhone }}
-            </p>
-            <p class="vehicle-count">
-              共 {{ filteredVehicles.length }} 台車輛
-            </p>
-          </div>
-          <div class="owner-actions">
-            <el-button type="primary" @click="contactOwner">
-              <i class="el-icon-phone"></i>
-              聯繫車主
-            </el-button>
-          </div>
-        </div>
-      </el-card>
+    <!-- 加载状态 -->
+    <div v-if="loading" class="loading-container">
+      <el-skeleton :rows="10" animated />
     </div>
 
-    <!-- 顶部车辆选择器 -->
-    <div class="vehicle-selector">
-      <el-select 
-        v-model="selectedVehicleId" 
-        placeholder="选择车辆" 
-        @change="handleVehicleChange"
-        style="width: 100%; max-width: 400px;"
-      >
-        <el-option
-          v-for="vehicle in filteredVehicles"
-          :key="getVehicleKey(vehicle)"
-          :label="getVehicleLabel(vehicle)"
-          :value="getVehicleKey(vehicle)"
-        />
-      </el-select>
-      
-      <div class="vehicle-count-badge" v-if="filteredVehicles.length > 1">
-        <el-tag type="info">
-          第 {{ currentVehicleIndex + 1 }} / {{ filteredVehicles.length }} 台
-        </el-tag>
+    <!-- 错误状态 -->
+    <div v-else-if="error" class="error-container">
+      <el-alert
+        :title="error"
+        type="error"
+        show-icon
+        :closable="false"
+      />
+      <el-button @click="retryInitialize" type="primary" style="margin-top: 20px;">
+        重新加载
+      </el-button>
+    </div>
+
+    <!-- 正常内容 -->
+    <div v-else>
+      <!-- 车主信息显示 -->
+      <div v-if="ownerPhone && filteredVehicles.length > 0" class="owner-info">
+        <el-card shadow="never">
+          <div class="owner-content">
+            <div class="owner-avatar">
+              <el-avatar :size="60" :src="ownerAvatar">
+                {{ ownerName.charAt(0) }}
+              </el-avatar>
+            </div>
+            <div class="owner-details">
+              <h3>{{ ownerName }}</h3>
+              <p class="owner-phone">
+                <el-icon><Phone /></el-icon>
+                {{ ownerPhone }}
+              </p>
+              <p class="vehicle-count">
+                共 {{ filteredVehicles.length }} 台車輛
+              </p>
+            </div>
+            <div class="owner-actions">
+              <el-button type="primary" @click="contactOwner">
+                <el-icon><Phone /></el-icon>
+                聯繫車主
+              </el-button>
+            </div>
+          </div>
+        </el-card>
       </div>
-    </div>
 
-    <!-- 主要仪表板内容 -->
-    <div class="dashboard-content" v-if="filteredVehicles.length > 0">
-      <!-- 车辆概览卡片 -->
-      <div class="overview-cards">
+      <!-- 顶部车辆选择器 -->
+      <div class="vehicle-selector" v-if="filteredVehicles.length > 0">
+        <el-select 
+          v-model="selectedVehicleId" 
+          placeholder="选择车辆" 
+          @change="handleVehicleChange"
+          style="width: 100%; max-width: 400px;"
+        >
+          <el-option
+            v-for="vehicle in filteredVehicles"
+            :key="getVehicleKey(vehicle)"
+            :label="getVehicleLabel(vehicle)"
+            :value="getVehicleKey(vehicle)"
+          />
+        </el-select>
+        
+        <div class="vehicle-count-badge" v-if="filteredVehicles.length > 1">
+          <el-tag type="info">
+            第 {{ currentVehicleIndex + 1 }} / {{ filteredVehicles.length }} 台
+          </el-tag>
+        </div>
+      </div>
+
+      <!-- 主要仪表板内容 -->
+      <div class="dashboard-content" v-if="filteredVehicles.length > 0">
+        <!-- 车辆概览卡片 -->
+        <div class="overview-cards">
+          <el-row :gutter="20">
+            <el-col :xs="12" :sm="6">
+              <StatCard
+                title="当前里程"
+                :value="currentMileage"
+                unit="km"
+                icon="odometer"
+                type="mileage"
+              />
+            </el-col>
+            <el-col :xs="12" :sm="6">
+              <StatCard
+                title="近期保养"
+                :value="recentServicesCount"
+                unit="次"
+                icon="tools"
+                type="service"
+              />
+            </el-col>
+            <el-col :xs="12" :sm="6">
+              <StatCard
+                title="即将到期"
+                :value="upcomingServicesCount"
+                unit="项"
+                icon="alarm-clock"
+                type="upcoming"
+              />
+            </el-col>
+            <el-col :xs="12" :sm="6">
+              <StatCard
+                title="年度花费"
+                :value="totalCostThisYear"
+                unit="元"
+                icon="money"
+                type="cost"
+              />
+            </el-col>
+          </el-row>
+        </div>
+
+        <!-- 其余内容保持不变 -->
         <el-row :gutter="20">
-          <el-col :xs="12" :sm="6">
-            <StatCard
-              title="当前里程"
-              :value="currentMileage"
-              unit="km"
-              icon="odometer"
-              type="mileage"
-            />
+          <!-- 左侧内容 -->
+          <el-col :xs="24" :lg="16">
+            <!-- 车辆信息 -->
+            <VehicleInfo :vehicle="currentVehicle" />
+
+            <!-- 即将到期保养项目 -->
+            <el-card class="dashboard-section" shadow="hover">
+              <template #header>
+                <div class="section-header">
+                  <el-icon><AlarmClock /></el-icon>
+                  <span>即将到期保养项目</span>
+                  <el-tag type="danger" size="small">{{ upcomingServicesCount }} 项</el-tag>
+                </div>
+              </template>
+              <div class="service-list">
+                <div 
+                  v-for="service in upcomingServices" 
+                  :key="service.item_en"
+                  class="service-item"
+                >
+                  <div class="service-info">
+                    <div class="service-name">{{ service.item_zh }}</div>
+                    <div class="service-due">
+                      {{ getDueText(service) }}
+                    </div>
+                  </div>
+                  <div class="service-category">
+                    <el-tag :type="getCategoryTagType(service.category)" size="small">
+                      {{ service.category }}
+                    </el-tag>
+                  </div>
+                </div>
+                <div v-if="upcomingServices.length === 0" class="empty-state">
+                  <el-icon><SuccessFilled /></el-icon>
+                  <p>暂无即将到期的保养项目</p>
+                </div>
+              </div>
+            </el-card>
+
+            <!-- 近期保养记录 -->
+            <el-card class="dashboard-section" shadow="hover">
+              <template #header>
+                <div class="section-header">
+                  <el-icon><Calendar /></el-icon>
+                  <span>近期保养记录</span>
+                  <el-tag type="info" size="small">{{ recentServices.length }} 笔</el-tag>
+                </div>
+              </template>
+              <div class="service-list">
+                <div 
+                  v-for="record in recentServices" 
+                  :key="`${record.item_en}-${record.service_date}`"
+                  class="service-item"
+                >
+                  <div class="service-info">
+                    <div class="service-name">{{ record.item_zh }}</div>
+                    <div class="service-date">{{ formatDate(record.service_date) }}</div>
+                    <div class="service-mileage">里程: {{ (record.service_mileage || 0).toLocaleString() }} km</div>
+                    <div class="service-note" v-if="record.note">{{ record.note }}</div>
+                  </div>
+                  <div class="service-cost">
+                    <span v-if="record.cost > 0">¥{{ record.cost }}</span>
+                    <el-tag v-else type="info" size="small">免费</el-tag>
+                  </div>
+                </div>
+                <div v-if="recentServices.length === 0" class="empty-state">
+                  <el-icon><SuccessFilled /></el-icon>
+                  <p>暂无近期保养记录</p>
+                </div>
+              </div>
+            </el-card>
           </el-col>
-          <el-col :xs="12" :sm="6">
-            <StatCard
-              title="近期保养"
-              :value="recentServicesCount"
-              unit="次"
-              icon="tools"
-              type="service"
-            />
-          </el-col>
-          <el-col :xs="12" :sm="6">
-            <StatCard
-              title="即将到期"
-              :value="upcomingServicesCount"
-              unit="项"
-              icon="alarm-clock"
-              type="upcoming"
-            />
-          </el-col>
-          <el-col :xs="12" :sm="6">
-            <StatCard
-              title="年度花费"
-              :value="totalCostThisYear"
-              unit="元"
-              icon="money"
-              type="cost"
-            />
+
+          <!-- 右侧内容 -->
+          <el-col :xs="24" :lg="8">
+            <!-- 保养提醒 -->
+            <el-card class="dashboard-section" shadow="hover">
+              <template #header>
+                <div class="section-header">
+                  <el-icon><Bell /></el-icon>
+                  <span>保养提醒</span>
+                </div>
+              </template>
+              <div class="reminder-list">
+                <div class="reminder-item" v-for="reminder in maintenanceReminders" :key="reminder.type">
+                  <div class="reminder-icon" :class="reminder.type">
+                    <i :class="reminder.icon"></i>
+                  </div>
+                  <div class="reminder-content">
+                    <div class="reminder-title">{{ reminder.title }}</div>
+                    <div class="reminder-desc">{{ reminder.description }}</div>
+                  </div>
+                  <div class="reminder-action">
+                    <el-button type="primary" size="small" @click="handleReminderAction(reminder)">
+                      {{ reminder.action }}
+                    </el-button>
+                  </div>
+                </div>
+                <div v-if="maintenanceReminders.length === 0" class="empty-state">
+                  <el-icon><SuccessFilled /></el-icon>
+                  <p>暂无保养提醒</p>
+                </div>
+              </div>
+            </el-card>
+
+            <!-- 未曾保养项目 -->
+            <el-card class="dashboard-section" shadow="hover">
+              <template #header>
+                <div class="section-header">
+                  <el-icon><Warning /></el-icon>
+                  <span>未曾保养项目</span>
+                  <el-tag type="warning" size="small">{{ neverMaintainedItems.length }} 项</el-tag>
+                </div>
+              </template>
+              <div class="service-list">
+                <div 
+                  v-for="item in neverMaintainedItems" 
+                  :key="item.item_en"
+                  class="service-item never-maintained"
+                >
+                  <div class="service-icon" style="display: none;">
+                    <el-icon><Warning /></el-icon>
+                  </div>
+                  <div class="service-info">
+                    <div class="service-name">{{ item.item_zh }}</div>
+                    <div class="service-type" v-if="getServiceTypes(item.service_type).length > 0">
+                      <el-tag 
+                        v-for="serviceType in getServiceTypes(item.service_type)" 
+                        :key="serviceType"
+                        :type="getServiceTypeTag(serviceType)" 
+                        size="mini"
+                        class="service-type-tag"
+                      >
+                        {{ getServiceTypeText(serviceType) }}
+                      </el-tag>
+                    </div>
+                    <div class="no-service-types" v-else>
+                      <el-tag type="info" size="mini">未設定服務類型</el-tag>
+                    </div>
+                  </div>
+                  <div class="service-category">
+                    <el-tag :type="getCategoryTagType(item.category)" size="small">
+                      {{ item.category || '未分類' }}
+                    </el-tag>
+                  </div>
+                </div>
+                <div v-if="neverMaintainedItems.length === 0" class="empty-state">
+                  <el-icon><SuccessFilled /></el-icon>
+                  <p>所有项目都有保养记录</p>
+                </div>
+              </div>
+            </el-card>
+
+            <!-- 快速操作 -->
+            <el-card class="dashboard-section" shadow="hover">
+              <template #header>
+                <div class="section-header">
+                  <el-icon><Operation /></el-icon>
+                  <span>快速操作</span>
+                </div>
+              </template>
+              <div class="quick-actions">
+                <el-button type="primary" class="quick-action-btn" @click="addMaintenanceRecord">
+                  <el-icon><Plus /></el-icon>
+                  新增保养记录
+                </el-button>
+                <el-button class="quick-action-btn" @click="updateMileage">
+                  <el-icon><Odometer /></el-icon>
+                  更新里程
+                </el-button>
+                <el-button class="quick-action-btn" @click="viewAllRecords">
+                  <el-icon><Calendar /></el-icon>
+                  查看所有记录
+                </el-button>
+              </div>
+            </el-card>
           </el-col>
         </el-row>
       </div>
 
-      <el-row :gutter="20">
-        <!-- 左侧内容 -->
-        <el-col :xs="24" :lg="16">
-          <!-- 车辆信息 -->
-          <VehicleInfo :vehicle="currentVehicle" />
-
-          <!-- 即将到期保养项目 -->
-          <el-card class="dashboard-section" shadow="hover">
-            <template #header>
-              <div class="section-header">
-                <i class="el-icon-warning-outline"></i>
-                <span>即将到期保养项目</span>
-                <el-tag type="danger" size="small">{{ upcomingServicesCount }} 项</el-tag>
-              </div>
-            </template>
-            <div class="service-list">
-              <div 
-                v-for="service in upcomingServices" 
-                :key="service.item_en"
-                class="service-item"
-              >
-                <div class="service-info">
-                  <div class="service-name">{{ service.item_zh }}</div>
-                  <div class="service-due">
-                    {{ getDueText(service) }}
-                  </div>
-                </div>
-                <div class="service-category">
-                  <el-tag :type="getCategoryTagType(service.category)" size="small">
-                    {{ service.category }}
-                  </el-tag>
-                </div>
-              </div>
-              <div v-if="upcomingServices.length === 0" class="empty-state">
-                <i class="el-icon-success"></i>
-                <p>暂无即将到期的保养项目</p>
-              </div>
-            </div>
-          </el-card>
-
-          <!-- 近期保养记录 -->
-          <el-card class="dashboard-section" shadow="hover">
-            <template #header>
-              <div class="section-header">
-                <i class="el-icon-time"></i>
-                <span>近期保养记录</span>
-                <el-tag type="info" size="small">{{ recentServices.length }} 笔</el-tag>
-              </div>
-            </template>
-            <div class="service-list">
-              <div 
-                v-for="record in recentServices" 
-                :key="`${record.item_en}-${record.service_date}`"
-                class="service-item"
-              >
-                <div class="service-info">
-                  <div class="service-name">{{ record.item_zh }}</div>
-                  <div class="service-date">{{ formatDate(record.service_date) }}</div>
-                  <div class="service-mileage">里程: {{ (record.service_mileage || 0).toLocaleString() }} km</div>
-                  <div class="service-note" v-if="record.note">{{ record.note }}</div>
-                </div>
-                <div class="service-cost">
-                  <span v-if="record.cost > 0">¥{{ record.cost }}</span>
-                  <el-tag v-else type="info" size="small">免费</el-tag>
-                </div>
-              </div>
-              <div v-if="recentServices.length === 0" class="empty-state">
-                <i class="el-icon-document"></i>
-                <p>暂无近期保养记录</p>
-              </div>
-            </div>
-          </el-card>
-        </el-col>
-
-        <!-- 右侧内容 -->
-        <el-col :xs="24" :lg="8">
-          <!-- 保养提醒 -->
-          <el-card class="dashboard-section" shadow="hover">
-            <template #header>
-              <div class="section-header">
-                <i class="el-icon-bell"></i>
-                <span>保养提醒</span>
-              </div>
-            </template>
-            <div class="reminder-list">
-              <div class="reminder-item" v-for="reminder in maintenanceReminders" :key="reminder.type">
-                <div class="reminder-icon" :class="reminder.type">
-                  <i :class="reminder.icon"></i>
-                </div>
-                <div class="reminder-content">
-                  <div class="reminder-title">{{ reminder.title }}</div>
-                  <div class="reminder-desc">{{ reminder.description }}</div>
-                </div>
-                <div class="reminder-action">
-                  <el-button type="primary" size="small" @click="handleReminderAction(reminder)">
-                    {{ reminder.action }}
-                  </el-button>
-                </div>
-              </div>
-              <div v-if="maintenanceReminders.length === 0" class="empty-state">
-                <i class="el-icon-success"></i>
-                <p>暂无保养提醒</p>
-              </div>
-            </div>
-          </el-card>
-
-          <!-- 未曾保养项目 -->
-          <el-card class="dashboard-section" shadow="hover">
-            <template #header>
-              <div class="section-header">
-                <el-icon><Warning /></el-icon>
-                <span>未曾保养项目</span>
-                <el-tag type="warning" size="small">{{ neverMaintainedItems.length }} 项</el-tag>
-              </div>
-            </template>
-            <div class="service-list">
-              <div 
-                v-for="item in neverMaintainedItems" 
-                :key="item.item_en"
-                class="service-item never-maintained"
-              >
-                <div class="service-icon">
-                  <el-icon><Warning /></el-icon>
-                </div>
-                <div class="service-info">
-                  <div class="service-name">{{ item.item_zh }}</div>
-                  <div class="service-type" v-if="getServiceTypes(item.service_type).length > 0">
-                    <el-tag 
-                      v-for="serviceType in getServiceTypes(item.service_type)" 
-                      :key="serviceType"
-                      :type="getServiceTypeTag(serviceType)" 
-                      size="mini"
-                      class="service-type-tag"
-                    >
-                      {{ getServiceTypeText(serviceType) }}
-                    </el-tag>
-                  </div>
-                  <div class="no-service-types" v-else>
-                    <el-tag type="info" size="mini">未設定服務類型</el-tag>
-                  </div>
-                </div>
-                <div class="service-category">
-                  <el-tag :type="getCategoryTagType(item.category)" size="small">
-                    {{ item.category || '未分類' }}
-                  </el-tag>
-                </div>
-              </div>
-              <div v-if="neverMaintainedItems.length === 0" class="empty-state">
-                <el-icon><SuccessFilled /></el-icon>
-                <p>所有项目都有保养记录</p>
-              </div>
-            </div>
-          </el-card>
-
-          <!-- 快速操作 -->
-          <el-card class="dashboard-section" shadow="hover">
-            <template #header>
-              <div class="section-header">
-                <i class="el-icon-operation"></i>
-                <span>快速操作</span>
-              </div>
-            </template>
-            <div class="quick-actions">
-              <el-button type="primary" class="quick-action-btn" @click="addMaintenanceRecord">
-                <i class="el-icon-plus"></i>
-                新增保养记录
-              </el-button>
-              <el-button class="quick-action-btn" @click="updateMileage">
-                <i class="el-icon-edit"></i>
-                更新里程
-              </el-button>
-              <el-button class="quick-action-btn" @click="viewAllRecords">
-                <i class="el-icon-document"></i>
-                查看所有记录
-              </el-button>
-            </div>
-          </el-card>
-        </el-col>
-      </el-row>
-    </div>
-
-    <!-- 无车辆提示 -->
-    <div v-else class="no-vehicles">
-      <el-empty description="未找到该车主的车辆信息">
-        <el-button type="primary" @click="goToVehicleList">查看所有车辆</el-button>
-      </el-empty>
+      <!-- 无车辆提示 -->
+      <div v-else class="no-vehicles">
+        <el-empty description="未找到该车主的车辆信息">
+          <el-button type="primary" @click="goToVehicleList">查看所有车辆</el-button>
+        </el-empty>
+      </div>
     </div>
   </div>
 </template>
@@ -292,7 +314,7 @@ import { useRoute, useRouter } from 'vue-router'
 import { useVehicleStore } from '../stores/vehicles'
 import VehicleInfo from '../components/VehicleInfo.vue'
 import StatCard from '../components/StatCard.vue'
-import { Warning, SuccessFilled } from '@element-plus/icons-vue'
+import { Warning, SuccessFilled, Odometer } from '@element-plus/icons-vue'
 
 export default {
   name: 'Dashboard',
@@ -313,21 +335,80 @@ export default {
     const router = useRouter()
     const vehicleStore = useVehicleStore()
     const selectedVehicleId = ref('')
+    const loading = ref(true)
+    const error = ref(null)
 
     // 从路由参数获取手机号码
-    const ownerPhone = computed(() => props.phone || route.params.phone || '')
-
-    // 计算属性
-    const vehicles = computed(() => vehicleStore.allVehicles)
-    const filteredVehicles = computed(() => {
-      if (ownerPhone.value) {
-        return vehicleStore.vehiclesByPhone
+    const ownerPhone = computed(() => {
+      // 优先从 props 获取（路由配置了 props: true）
+      if (props.phone) {
+        return props.phone
       }
-      return vehicles.value
+      // 备用从路由参数获取
+      return route.params.phone || ''
     })
 
-    const currentVehicle = computed(() => vehicleStore.currentVehicle)
+    // 初始化数据
+    const initialize = async () => {
+      try {
+        loading.value = true
+        error.value = null
+        console.log('🔧 Dashboard 初始化开始...')
+        
+        // 初始化 store
+        await vehicleStore.initialize()
+        console.log('🔧 Store 初始化完成，车辆数量:', vehicleStore.allVehicles.length)
+        
+        // 设置选中的手机号码
+        if (ownerPhone.value) {
+          vehicleStore.setSelectedPhone(ownerPhone.value)
+          console.log('🔧 设置选中手机:', ownerPhone.value)
+        }
+        
+        // 设置默认选中的车辆
+        if (filteredVehicles.value.length > 0) {
+          selectedVehicleId.value = getVehicleKey(filteredVehicles.value[0])
+          vehicleStore.setSelectedVehicle(selectedVehicleId.value)
+          console.log('🔧 设置默认车辆:', selectedVehicleId.value)
+        }
+        
+      } catch (err) {
+        console.error('🔧 Dashboard 初始化错误:', err)
+        error.value = err.message || '加载数据失败'
+      } finally {
+        loading.value = false
+      }
+    }
 
+    // 重新加载
+    const retryInitialize = () => {
+      initialize()
+    }
+
+    // 计算属性
+    const vehicles = computed(() => {
+      console.log('🔧 vehicles computed:', vehicleStore.allVehicles)
+      return vehicleStore.allVehicles
+    })
+
+    const filteredVehicles = computed(() => {
+      let result = []
+      if (ownerPhone.value) {
+        result = vehicleStore.vehiclesByPhone
+      } else {
+        result = vehicles.value
+      }
+      console.log('🔧 filteredVehicles:', result)
+      return result
+    })
+
+    const currentVehicle = computed(() => {
+      const vehicle = vehicleStore.currentVehicle
+      console.log('🔧 currentVehicle:', vehicle)
+      return vehicle
+    })
+
+    // 其他计算属性保持不变...
     const currentMileage = computed(() => {
       const vehicle = currentVehicle.value
       if (!vehicle || Object.keys(vehicle).length === 0) return 0
@@ -358,7 +439,6 @@ export default {
 
     const upcomingServicesCount = computed(() => upcomingServices.value.length)
 
-    // 近期保养记录 - 按日期倒序排列，最新的在前面
     const recentServices = computed(() => {
       const vehicle = currentVehicle.value
       if (!vehicle || !vehicle.maintenance_records) return []
@@ -371,7 +451,6 @@ export default {
               allServices.push({
                 ...item,
                 ...history,
-                // 添加排序用的时间戳
                 timestamp: new Date(history.service_date).getTime()
               })
             }
@@ -379,10 +458,9 @@ export default {
         }
       })
       
-      // 按日期倒序排列，最新的在前面
       return allServices
         .sort((a, b) => b.timestamp - a.timestamp)
-        .slice(0, 8) // 显示最近8条记录
+        .slice(0, 8)
     })
 
     const recentServicesCount = computed(() => recentServices.value.length)
@@ -407,17 +485,15 @@ export default {
       return total
     })
 
-    // 未曾保养项目 - service_history 为空数组
     const neverMaintainedItems = computed(() => {
       const vehicle = currentVehicle.value
       if (!vehicle || !vehicle.maintenance_records) return []
       
       return Object.values(vehicle.maintenance_records)
         .filter(item => {
-          // 检查 service_history 是否为空数组或不存在
           return !item.service_history || item.service_history.length === 0
         })
-        .sort((a, b) => a.item_zh.localeCompare(b.item_zh)) // 按中文名称排序
+        .sort((a, b) => a.item_zh.localeCompare(b.item_zh))
     })
 
     const maintenanceReminders = computed(() => {
@@ -466,7 +542,7 @@ export default {
       return reminders
     })
 
-    // 方法
+    // 方法保持不变...
     const getVehicleKey = (vehicle) => {
       return vehicle.vehicle_info?.license_plate || vehicle.license_plate || ''
     }
@@ -476,19 +552,6 @@ export default {
         return `${vehicle.vehicle_info.brand || vehicle.vehicle_info.make} ${vehicle.vehicle_info.model} - ${vehicle.vehicle_info.license_plate}`
       }
       return `${vehicle.make} ${vehicle.model} - ${vehicle.license_plate}`
-    }
-
-    const getVehicleBrand = (vehicle) => {
-      return vehicle.vehicle_info?.brand || vehicle.vehicle_info?.make || '未知'
-    }
-
-    const getVehicleModel = (vehicle) => {
-      return vehicle.vehicle_info?.model || '未知'
-    }
-
-    const getCurrentMileage = (vehicle) => {
-      if (!vehicle) return 0
-      return vehicle.vehicle_info?.current_mileage || vehicle.current_mileage || 0
     }
 
     const currentVehicleIndex = computed(() => {
@@ -536,14 +599,11 @@ export default {
       }
     }
 
-    // 處理 service_type 多重值 - 安全處理空陣列
     const getServiceTypes = (serviceType) => {
       if (!serviceType) return []
-      // 如果是陣列直接返回
       if (Array.isArray(serviceType)) {
         return serviceType.filter(type => type && type.trim().length > 0)
       }
-      // 向後兼容：如果還是字串就分割
       if (typeof serviceType === 'string') {
         return serviceType.split('|').filter(type => type && type.trim().length > 0)
       }
@@ -621,17 +681,18 @@ export default {
 
     // 生命周期
     onMounted(() => {
-      if (vehicles.value.length > 0) {
-        selectedVehicleId.value = getVehicleKey(vehicles.value[0])
-        handleVehicleChange()
-      }
+      console.log('🔧 Dashboard mounted')
+      // 在 Dashboard.vue 的 mounted 中添加
+      console.log('🔧 環境變量 VITE_AUTH_MODE:', import.meta.env.VITE_AUTH_MODE);
+      console.log('🔧 環境變量 VITE_API_BASE_URL:', import.meta.env.VITE_API_BASE_URL);
+      initialize()
     })
 
-    // 监听车辆数据变化
-    watch(vehicles, (newVehicles) => {
-      if (newVehicles.length > 0 && !selectedVehicleId.value) {
-        selectedVehicleId.value = getVehicleKey(newVehicles[0])
-        handleVehicleChange()
+    // 监听路由参数变化
+    watch(() => route.params.phone, (newPhone) => {
+      if (newPhone) {
+        console.log('🔧 手机号码变化:', newPhone)
+        initialize()
       }
     })
 
@@ -652,11 +713,10 @@ export default {
       totalCostThisYear,
       neverMaintainedItems,
       maintenanceReminders,
+      loading,
+      error,
       getVehicleKey,
       getVehicleLabel,
-      getVehicleBrand,
-      getVehicleModel,
-      getCurrentMileage,
       getCategoryTagType,
       getDueText,
       formatDate,
@@ -669,13 +729,24 @@ export default {
       updateMileage,
       viewAllRecords,
       goToVehicleList,
-      contactOwner
+      contactOwner,
+      retryInitialize
     }
   }
 }
 </script>
 
 <style scoped>
+/* 添加加载和错误状态的样式 */
+.loading-container {
+  padding: 20px;
+}
+
+.error-container {
+  padding: 20px;
+  text-align: center;
+}
+
 .dashboard-container {
   padding: 20px;
   background-color: #f5f7fa;

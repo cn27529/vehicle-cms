@@ -1,0 +1,41 @@
+(base) ⠠⠵ tree -I "node_modules|.git|dist|package-lock.json" ./client                  
+./client
+├── deepseek.txt
+├── index.html
+├── package.json
+├── public
+│   ├── temple-icon.png
+│   ├── vite.svg
+│   └── vue.svg
+├── src
+│   ├── App.vue
+│   ├── assets
+│   │   ├── temple-icon.png
+│   │   ├── vite.svg
+│   │   └── vue.svg
+│   ├── components
+│   │   ├── MaintenanceRecord.vue
+│   │   ├── StatCard.vue
+│   │   └── VehicleInfo.vue
+│   ├── data
+│   │   ├── car_example_data.json
+│   │   ├── car_maintenance.json
+│   │   └── car_maintenance_org.json
+│   ├── main.js
+│   ├── router
+│   │   └── index.js
+│   ├── services
+│   │   └── vehicleService.js
+│   ├── stores
+│   │   └── vehicles.js
+│   ├── style.css
+│   ├── utils
+│   │   └── dateFormatter.js
+│   └── views
+│       ├── Dashboard.vue
+│       ├── MaintenanceHistory.vue
+│       └── VehicleList.vue
+├── vite.config.js
+└── vue.config.js
+
+11 directories, 27 files

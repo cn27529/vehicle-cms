@@ -4,7 +4,7 @@
       <!-- 侧边栏 -->
       <el-aside :width="isCollapse ? '64px' : '200px'" class="sidebar">
         <div class="logo">
-          <i class="el-icon-car"></i>
+          <el-icon><Menu /></el-icon>
           <span v-if="!isCollapse">汽車保養記錄</span>
         </div>
         <el-menu
@@ -18,16 +18,20 @@
           active-text-color="#409EFF"
         >
           <el-menu-item index="/dashboard">
-            <i class="el-icon-data-board"></i>
+            <el-icon><DataAnalysis /></el-icon>
             <template #title>儀表板</template>
           </el-menu-item>
           <el-menu-item index="/vehicles">
-            <i class="el-icon-truck"></i>
+            <el-icon><Van /></el-icon>
             <template #title>車輛列表</template>
           </el-menu-item>
           <el-menu-item index="/maintenance">
-            <i class="el-icon-document"></i>
+            <el-icon><Calendar /></el-icon>
             <template #title>保養記錄</template>
+          </el-menu-item>
+          <el-menu-item index="/statistics">
+            <el-icon><DataAnalysis /></el-icon>
+            <template #title>統計數據</template>
           </el-menu-item>
         </el-menu>
       </el-aside>
@@ -39,7 +43,7 @@
           <div class="header-left">
             <el-button
               type="text"
-              :icon="isCollapse ? 'el-icon-expand' : 'el-icon-fold'"
+              :icon="isCollapse ? 'expand' : 'fold'"
               @click="toggleSidebar"
               class="collapse-btn"
             ></el-button>
@@ -76,6 +80,7 @@
 </template>
 
 <script>
+import { DataAnalysis } from "@element-plus/icons-vue";
 import { ref, computed } from "vue";
 import { useRoute } from "vue-router";
 
