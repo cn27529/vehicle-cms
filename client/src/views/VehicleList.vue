@@ -173,6 +173,7 @@
 import { ref, computed, onMounted, watch } from "vue";
 import { useVehicleStore } from "../stores/vehicles";
 import { useRoute, useRouter } from "vue-router";
+import { ElMessage, ElLoading } from 'element-plus'
 
 export default {
   name: "VehicleList",
@@ -183,6 +184,7 @@ export default {
     }
   },
   setup(props) {
+    console.log("🔧 Dashboard setup 开始执行");
     const route = useRoute();
     const vehicleStore = useVehicleStore();
     const router = useRouter();
@@ -343,11 +345,11 @@ export default {
       return "低里程";
     };
 
-    // 查看车辆
+    // 查看車輛儀表板
     const viewOwnerVehicles = (vehicle) => {
       const phone = getOwnerPhone(vehicle);
       if (phone && phone.length === 10) {
-        console.log("👥 查看车主所有车辆:", phone);
+        console.log("👥 查看車輛儀表板:", phone);
         router.push(`/dashboard/${phone}`);
       }
     };
@@ -355,8 +357,8 @@ export default {
     const viewMaintananceVehicles = (vehicle) => {
       const phone = getOwnerPhone(vehicle);
       if (phone && phone.length === 10) {
-        console.log("👥 查看车主保養記錄:", phone);
-        router.push(`/maintanance/${phone}`);
+        console.log("👥 查看保養記錄:", phone);
+        router.push(`/maintenance/${phone}`);
       }
     };
 

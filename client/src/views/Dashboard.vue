@@ -682,9 +682,10 @@ export default {
     // 生命周期
     onMounted(() => {
       console.log('🔧 Dashboard mounted')
-      // 在 Dashboard.vue 的 mounted 中添加
       console.log('🔧 環境變量 VITE_AUTH_MODE:', import.meta.env.VITE_AUTH_MODE);
       console.log('🔧 環境變量 VITE_API_BASE_URL:', import.meta.env.VITE_API_BASE_URL);
+      console.log('🔧 路由参数:', route.params)
+      console.log('🔧 Props 参数:', props)     
       initialize()
     })
 
