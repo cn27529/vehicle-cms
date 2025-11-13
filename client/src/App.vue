@@ -1,8 +1,19 @@
 <template>
   <div id="app">
+    <!-- 移动端遮罩层 -->
+    <div 
+      v-if="isMobile && sidebarOpen" 
+      class="sidebar-mask"
+      @click="closeSidebar"
+    ></div>
+    
     <el-container class="layout-container">
       <!-- 侧边栏 -->
-      <el-aside :width="isCollapse ? '64px' : '200px'" class="sidebar">
+      <el-aside 
+        :width="isCollapse ? '64px' : '200px'" 
+        class="sidebar"
+        :class="{ 'open': sidebarOpen }"
+      >
         <div class="logo">
           <el-icon><Menu /></el-icon>
           <span v-if="!isCollapse">汽車保養記錄</span>
@@ -41,8 +52,8 @@
         <!-- 头部 -->
         <el-header class="header">
           <div class="header-left">
+            <!-- 修改這裡：將 type="text" 改為 type="link" -->
             <el-button
-              type="text"
               :icon="isCollapse ? 'expand' : 'fold'"
               @click="toggleSidebar"
               class="collapse-btn"
@@ -81,15 +92,22 @@
 
 <script>
 import { DataAnalysis } from "@element-plus/icons-vue";
-import { ref, computed } from "vue";
+import { ref, computed, onMounted, onUnmounted, watch } from "vue";
 import { useRoute } from "vue-router";
 
 export default {
   name: "App",
   setup() {
     const isCollapse = ref(false);
+    const sidebarOpen = ref(false);
+    const isMobile = ref(false);
     const route = useRoute();
     const userAvatar = ref("");
+
+    // 检测屏幕尺寸
+    const checkIsMobile = () => {
+      isMobile.value = window.innerWidth <= 768;
+    };
 
     const activeMenu = computed(() => route.path);
     
@@ -97,13 +115,26 @@ export default {
       const routeMap = {
         "/dashboard": "儀表板",
         "/vehicles": "車輛列表",
-        "/maintenance": "保養記錄"
+        "/maintenance": "保養記錄",
+        "/statistics": "統計數據"
       };
       return routeMap[route.path] || "首頁";
     });
 
     const toggleSidebar = () => {
-      isCollapse.value = !isCollapse.value;
+      if (isMobile.value) {
+        // 移动端：切换侧边栏显示/隐藏
+        sidebarOpen.value = !sidebarOpen.value;
+      } else {
+        // 桌面端：切换折叠/展开
+        isCollapse.value = !isCollapse.value;
+      }
+    };
+
+    const closeSidebar = () => {
+      if (isMobile.value) {
+        sidebarOpen.value = false;
+      }
     };
 
     const handleCommand = (command) => {
@@ -120,12 +151,31 @@ export default {
       }
     };
 
+    // 监听路由变化，在移动端自动关闭侧边栏
+    watch(() => route.path, () => {
+      if (isMobile.value) {
+        closeSidebar();
+      }
+    });
+
+    onMounted(() => {
+      checkIsMobile();
+      window.addEventListener('resize', checkIsMobile);
+    });
+
+    onUnmounted(() => {
+      window.removeEventListener('resize', checkIsMobile);
+    });
+
     return {
       isCollapse,
+      sidebarOpen,
+      isMobile,
       activeMenu,
       currentRouteName,
       userAvatar,
       toggleSidebar,
+      closeSidebar,
       handleCommand,
     };
   },
@@ -196,6 +246,12 @@ export default {
 .collapse-btn {
   font-size: 18px;
   margin-right: 16px;
+  /* 確保 link 類型的按鈕樣式正確 */
+  color: #606266;
+}
+
+.collapse-btn:hover {
+  color: #409EFF;
 }
 
 .user-info {
@@ -222,6 +278,17 @@ export default {
   overflow-y: auto;
 }
 
+/* 移动端遮罩层 */
+.sidebar-mask {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5);
+  z-index: 999;
+}
+
 /* 响应式设计 */
 @media (max-width: 768px) {
   .sidebar {
@@ -236,6 +303,11 @@ export default {
   
   .sidebar.open {
     transform: translateX(0);
+  }
+  
+  /* 确保侧边栏在移动端有合适的宽度 */
+  .sidebar:not(.el-menu--collapse) {
+    width: 200px !important;
   }
   
   .header {

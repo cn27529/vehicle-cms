@@ -144,8 +144,7 @@
               <el-button
                 type="success"
                 text
-                @click="viewMaintananceVehicles(vehicle)"
-              >
+                @click="viewMaintananceVehicles(vehicle)">
                 查看保養記錄
               </el-button>
             </div>

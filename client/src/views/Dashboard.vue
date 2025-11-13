@@ -53,7 +53,7 @@
       <div class="vehicle-selector" v-if="filteredVehicles.length > 0">
         <el-select 
           v-model="selectedVehicleId" 
-          placeholder="选择车辆" 
+          placeholder="選擇車輛" 
           @change="handleVehicleChange"
           style="width: 100%; max-width: 400px;"
         >
@@ -404,7 +404,7 @@ export default {
 
     const currentVehicle = computed(() => {
       const vehicle = vehicleStore.currentVehicle
-      console.log('🔧 currentVehicle:', vehicle)
+      //console.log('🔧 currentVehicle:', vehicle)
       return vehicle
     })
 

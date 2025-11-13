@@ -41,17 +41,17 @@
         </div>
       </template>
 
-      <div class="filter-section">
+      <div class="vehicle-selector" v-if="filteredVehicles.length > 0">
         <el-row :gutter="20">
           <el-col :xs="24" :sm="8">
             <el-select
               v-model="selectedVehicleId"
               placeholder="選擇車輛"
-              style="width: 100%"
               @change="handleVehicleChange"
+              style="width: 100%; max-width: 400px;"
             >
               <el-option
-                v-for="vehicle in vehicles"
+                v-for="vehicle in filteredVehicles"
                 :key="getVehicleKey(vehicle)"
                 :label="getVehicleLabel(vehicle)"
                 :value="getVehicleKey(vehicle)"
